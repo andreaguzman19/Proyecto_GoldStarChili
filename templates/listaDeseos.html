@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block contenido %}
+    <main>
+    <div class="container">
+        <div class="row">
+            <div class="col m6"><h3 style="margin:20px 0px;">Lista de deseos</h3></div>
+            <div class="col m4 input-field">
+                <input id="Busqueda" type="text" class="validate">
+                <label for="Busqueda">Buscar plato</label>
+            </div>
+            <div class="col m2" style="margin:30px 0px 10px 0px;">
+                <a onclick="buscarPlato()" class="waves-effect waves-light btn"><i class="material-icons">search</i></a>
+            </div>
+        </div>
+        <div class="row">
+                {% for plato in platos%}
+                <div class="col m3 plato">
+                    <div class="card hoverable">
+                        <div class="card-image">
+                            <img src="/static/img/{{plato['img']}}" height="160px" width="auto">
+                            <a class="flotante_star btn-floating waves-effect waves-light"><i class="material-icons">star_border</i></a>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title platoNombre">{{plato["nombre"]}}</span>
+                            <span style="font-size:22px; font-style: italic;">${{plato["precio"]}}</span>
+                            <a class="waves-effect waves-light tooltipped black-text" data-position="bottom" data-tooltip="detalles del plato" style="margin-left: 30px;" href="/Menu/detalle_plato/{{plato['id_plato']}}"><i class="material-icons">add_circle_outline</i></a>
+                        </div>
+                        <div class="card-action" style="display:flex; flex-direction: column;">
+                            <a class="waves-effect waves-light btn" href="/Pedidos/{{plato['id_plato']}}">Pedir</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}                                                   
+        </div>
+    </div>
+    </main> 
+{% endblock %}
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            M.AutoInit();
+            var elems = document.querySelectorAll('.dropdown-trigger');
+            var instances = M.Dropdown.init(elems, options);
+        });
+        function buscarPlato(){
+            var platoCard = document.getElementsByClassName("plato");
+            var platos = document.getElementsByClassName("platoNombre");
+            var busqueda = document.getElementById("Busqueda").value;
+            for(let i=0;i<platos.length; i++){
+                if(busqueda == ""){
+                    platoCard[i].style.display = "block";
+                }else{
+                    if(!platos[i].innerText.toLowerCase().includes(busqueda.toLowerCase())){
+                        platoCard[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}

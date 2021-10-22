@@ -1,0 +1,76 @@
+{% extends "baseUsuarios.html" %}
+{% block contenidoUsuario %}
+{% for message in get_flashed_messages() %}
+<input id="mensajeflash" type="hidden" value="{{message}}">
+{% endfor %} 
+    <div class="col dashboard_innerContent" style="padding: 0px 20px 40px 20px;">
+        <h4 class="center-align">Configuracion de cuenta</h4><br>
+        <div class="col s8 push-s2">
+            <hr>
+            <h6>Cambiar contraseña</h6>
+            <div id="cambiarPassHeader" class="col s12 center-align" style="margin: 15px 0px; display: block;">
+                <a class="waves-effect waves-light btn" onclick="cambiarPass_Campos()"><i class="material-icons left">key</i>Cambiar Contraseña</a>
+            </div>
+            <div id="cambiarPassForm" class="col s12" style="display: none;">
+                <form method="post">
+                    <div class="input-field col s12 m6 l4">
+                        <input id="passwordActual" name="passwordActual" type="password" class="validate">
+                        <label for="passwordActual">Contraseña actual:</label>
+                    </div>
+                    <div class="input-field col s12 m6 l4">
+                        <input id="nuevoPassword" name="nuevoPassword" type="password" class="validate">
+                        <label for="nuevoPassword">Nueva contraseña:</label>
+                    </div>
+                    <div class="input-field col s12 l4">
+                        <input id="nuevoPassword2" name="nuevoPassword2" type="password" class="validate" onchange="confirmaPassword(this)">
+                        <label for="nuevoPassword2">Repita nueva contraseña:</label>
+                    </div>
+                    <div class="col s12 m6 center-align">
+                        <button id="cambiarPassBtn" class="waves-effect waves-light btn" href="/Usuario/Cuenta" type="submit"><i class="material-icons left">save</i>Guardar cambio</button>
+                    </div>
+                    <div class="col s12 m6 center-align">
+                        <a class="waves-effect waves-light btn purple" onclick="cambiarPass_Campos()"><i class="material-icons left">cancel</i>Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scriptsUsuarios %}
+    <script>
+        var habilitado = false
+        document.addEventListener('DOMContentLoaded', function() {
+            M.AutoInit();
+            var elems = document.querySelectorAll('.dropdown-trigger');
+            var instances = M.Dropdown.init(elems, options);
+        });
+        window.addEventListener('load', (event) => {
+            if(document.getElementById("mensajeflash")){
+                mensaje = document.getElementById("mensajeflash").value;
+                if(mensaje == "cambioPass")
+                    Swal.fire( 'Exito!','La contraseña se ha cambiado correctamente!','success');
+                if(mensaje == "fallido")
+                    Swal.fire( 'Error!','La contraseña actual es incorrecta!','warning');
+
+            }
+        });
+        function cambiarPass_Campos(){
+            form = document.getElementById("cambiarPassForm");
+            if(form.style.display == "none"){
+                document.getElementById("cambiarPassHeader").style.display = 'none';
+                form.style.display = 'block';
+            }else{
+                document.getElementById("cambiarPassHeader").style.display = 'block';
+                form.style.display = 'none';
+            }
+        }
+        function confirmaPassword(event){
+            if(document.getElementById("nuevoPassword").value != event.value){
+                document.getElementById("cambiarPassBtn").setAttribute("disabled","");
+                alert("Las contraseñas no coinciden");
+            }else{
+                document.getElementById("cambiarPassBtn").removeAttribute("disabled");
+            }
+        }
+    </script>
+{% endblock %}

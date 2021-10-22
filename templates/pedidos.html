@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block contenido %}
+{% for message in get_flashed_messages() %}
+<input id="mensajeflash" type="hidden" value="{{message}}">
+{% endfor %} 
+    <main>
+    <div class="container">
+        <div class="row">
+            <div class="col m6"><h3 style="margin:20px 0px;">Carrito de compras</h3></div>
+        </div>
+        <div class="row">
+            <div class="col m7 platos_del_carro">
+                {% for plato in platos %}
+                  <div class="row hoverable platopedido">
+                    <a class="flotante_star btn-floating btn-small waves-effect waves-light" onclick="eliminarPlato(this)"><i class="material-icons">close</i></a>
+                    <div class="col m7" style="margin-top: 15px;">
+                        <img src="/static/img/{{plato[3]}}" width="100%">
+                    </div>
+                    <div class="col m5">
+                        <div class="row" style = "margin-bottom: 0px;">
+                            <p style="font-size: 22px; font-weight: bold; margin: 10px; " >{{plato[1]}}</p>
+                        </div>
+                        <div class="row" style="margin-bottom: 0px;">
+                            <div class="input-field col m8">
+                                <input id="cantidad_pedido" type="number" step="1" value="1" onchange="calcular()">
+                                <label for="cantidad_pedido">Cantidad</label>
+                            </div>
+                        </div>
+                        <div class="row right-align">
+                            <span style="font-size: x-large; font-weight: bold;">Subtotal $</span >
+                            <span id="precio_plato" style="font-size: larger; font-style: italic;">{{plato[2]}}</span >
+                            <input id="precio_real" type="hidden" value="{{plato[2]}}"></input >
+                        </div>
+                    </div>
+                  </div>
+                  <hr>
+                {% endfor %}
+                
+            </div>
+            <div class="col m4 offset-m1 resumen_orden">
+                <div class="row" style="background-color: rgb(84, 9, 128);">
+                    <h5 class="center-align white-text" style="margin-top: 0; padding-top: 10px;">Resumen de la orden</h5>       
+                </div>
+                <div class="row" >
+                    <div class="col s12" style="display: flex; justify-content: space-around;">
+                        
+                         <p>Subtotal</p><p id="pedido_subtotal">$ </p>
+                        
+                        <p>Subtotal</p><p id="pedido_subtotal">$ 0</p>
+                        
+                    </div>
+                    <div class="col s12" style="display: flex; justify-content: space-around;"> 
+                        <p>Envio</p><p>$ 5000</p>
+                    </div>   
+                </div>
+                <div class="row">
+                    <div class="col s12" style="display: flex; justify-content: space-around; margin-bottom:15px;">
+                        
+                         <span style="font-size:25px; font-weight: bold;">Total</span><span style="font-size:25px; font-weight: bold;" id="pedido_total">$ </span>
+                        
+                         <span style="font-size:25px; font-weight: bold;">Total</span><span style="font-size:25px; font-weight: bold;" id="pedido_total">$ 0</span>
+                        
+                    </div>
+                    <div class="col s12" style="display: flex;flex-direction: column;align-items: center;">
+                        <a class="waves-effect waves-light btn"><i class="material-icons left">credit_card</i>Metodo de pago</a>
+                        <a class="waves-effect waves-light btn" style="margin-top: 10px;" onclick="Swal.fire(
+                            'Pedido confirmado!',
+                            'en minutos sale el domi!',
+                            'success'
+                          );">Confirmar pedido</a>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+    </main>
+{% endblock %}
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            M.AutoInit();
+            var elems = document.querySelectorAll('.dropdown-trigger');
+            var instances = M.Dropdown.init(elems, options);
+        });
+        function calcular(){
+            var cant = document.getElementById("cantidad_pedido").value;
+            var subtotalPlato = document.getElementById("precio_plato");
+            var subtotalField = document.getElementById("pedido_subtotal");
+            var totalField = document.getElementById("pedido_total");
+            var precio = document.getElementById("precio_real");
+            subtotalField.innerText = "$ " + (parseInt(precio.value) * parseInt(cant)).toString();
+            totalField.innerText = "$" + ((parseInt(precio.value) * parseInt(cant)) + 5000).toString();
+            subtotalPlato.innerText = (parseInt(precio.value) * parseInt(cant)).toString();
+        }
+        function eliminarPlato(element){
+            var padre = element.parentNode.parentNode;
+            var elim = element.parentNode;
+            var subtotalField = document.getElementById("pedido_subtotal");
+            var totalField = document.getElementById("pedido_total"); 
+            padre.removeChild(elim);
+            subtotalField.innerText = "$ 0";
+            totalField.innerText = "$ 0";
+            const carrovacio = document.createElement("h3");
+            carrovacio.innerText = " El carrito esta vacio ... ";
+            carrovacio.style.fontWeight = "bolder";
+            padre.appendChild(carrovacio);
+        }
+        window.addEventListener('load', (event) => {
+        mensaje = document.getElementById("mensajeflash").value;
+            if(mensaje == "login_failed")
+                Swal.fire( 'Error!',
+                    'Debes iniciar sesion para ver tu carrito de compras!',
+                    'error');      
+        });
+    </script>
+{% endblock %}

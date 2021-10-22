@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block contenido %}
+{% for message in get_flashed_messages() %}
+<input id="mensajeflash" type="hidden" value="{{message}}">
+{% endfor %} 
+<div class="banner">
+    <div class="banner-body">
+        <h3 class="text-uppercase">Bienvenido a Gold Star Chili</h3>
+        <p>Los mejores platillos y la mejor calidad los encuentras en Gold Star Chili</p>
+        <a class="waves-effect waves-light btn" href="/Menu"><i class="material-icons left">restaurant_menu</i>Ir al menu</a>
+    </div>
+</div>
+
+<div class="container" style="padding: 0px 30px;">
+    <h3 class="center-align">Nuestros servicios</h3>
+    <br>
+    <div class="row">
+        <div class="col m4" style="padding: 0px 10px;">
+            <p class="center-align"><i class="material-icons large">local_shipping</i></p>
+            <h5 class="center-align">Envíos a domicilio</h5>
+            <p class="center-align">Se entregan Pedidos  y servicios en el lugar donde nos lo soliciten - Contactenos Cel 300-555-789</p>
+        </div>
+        <div class="col m4" style="padding: 0px 10px;">
+            <p class="center-align"><i class="material-icons large">restaurant</i></p>
+            <h5 class="center-align">Ventas al por mayor</h5>
+            <p class="center-align">Contactenos para eventos Masivos y conozca Nuestros Planes</p>
+        </div>
+        <div class="col m4" style="padding: 0px 10px;">
+            <p class="center-align"><i class="material-icons large">store</i></p>
+            <h5 class="center-align">Reservaciones de local</h5>
+            <p class="center-align">Colocamos a disposicion nuestras instalaciones para cualquier celebracion bajo el buen servicio y Sabor de Nuestros Platos</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+        M.AutoInit();
+        var elems = document.querySelectorAll('.dropdown-trigger');
+        var instances = M.Dropdown.init(elems, options);
+    });
+    /*window.addEventListener('load', (event) => {
+        mensaje = document.getElementById("mensajeflash").value;
+            if(mensaje == "exito")
+                Swal.fire( 'Exito!','Usuario logueado correctamente!','success');
+    });*/
+</script>
+{% endblock %}

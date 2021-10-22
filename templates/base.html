@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }}</title>
+    <link rel="shortcut icon" href="img/icono.png" type="image/x-icon">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="/static/css/estilos.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+{% if bodyid %}
+<body id="{{ bodyid }}">
+{% else %}
+<body>
+{% endif%}
+    <!-- navbar -->
+    <header>
+	<ul id="menudropdown" class="dropdown-content">
+        {% if 'nit' in session %}
+            <li><a href="/Usuario">Configuración</a></li>
+            <li class="divider"></li>
+            <li><a href="/Logout">Cerrar sesion</a></li>
+        {% else %}
+            <li><a href="/Login">Iniciar sesion</a></li>
+            <li><a href="/Registro">Regístrate</a></li>
+        {% endif %}
+    </ul>
+    <nav style="background-color: #89D6F7;">
+        <div class="nav-wrapper">
+            <a href="/" class="brand-logo"><img src="/static/img/logo.PNG" alt=""style="padding-left: 15px padding-top: 5px;"></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a class="icono" href="/Menu"><i class="material-icons" style="font-size: 2rem;">restaurant_menu</i></a></li>
+                <li><a class="icono" href="/Lista_deseos"><i class="material-icons" style="font-size: 2rem;">star_border</i></a></li>
+                <li><a class="icono" href="/Pedidos"><i class="material-icons" style="font-size: 2rem;">shopping_cart</i></a></li>
+                <!-- Dropdown Trigger -->
+                <li><a class="icono dropdown-trigger" href="#!" data-target="menudropdown"><i class="material-icons" style="font-size: 3rem;">expand_more</i></a></li>
+            </ul>
+        </div>
+    </nav>
+    </header>
+    <!-- Content -->
+	{% block contenido %}
+    {% endblock %}
+    <!-- footer -->
+    <div class="footer-copyright" style="background-color: #89D6F7; border: 0.5px dotted grey;">
+        <div>© 2021 Copyright
+            <a class="black-text right" href="#!" onclick="alert('Esta vacio, vez...');">Acerca de nosotros</a>
+        </div>
+	</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

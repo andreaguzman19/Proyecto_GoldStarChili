@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block contenido %}
+{% for message in get_flashed_messages() %}
+<input id="mensajeflash" type="hidden" value="{{message}}">
+{% endfor %}
+    <main>
+    <div class="container login center">
+        <form method="post">
+            <div class="row">
+                <img src="/static/img/user.png" style="padding-top: 10px;">
+                <h5>Inicio de sesión</h5>
+                <div class="input-field col s12">
+                    <input required id="usuario" name="usuario_login" type="text" class="validate">
+                    <label for="usuario">Usuario</label>
+                </div>
+                <div class="input-field col s12">
+                    <input required id="password" name="password_login" type="password" class="validate">
+                    <label for="password">Contraseña</label>
+                </div>
+                <button class="waves-effect waves-light btn" href="/Login" type="submit">Ingresar</button>
+                <p>¿No tienes una cuenta? <a href="/Registro" style="color:dodgerblue">Registrate</a>.</p>
+                <p><a href="#">¿Olvidaste la contraseña?</a></p>
+            </div>
+        </form>
+    </div>
+    </main>
+{% endblock %}
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            M.AutoInit();
+            var elems = document.querySelectorAll('.dropdown-trigger');
+            var instances = M.Dropdown.init(elems, options);
+        });
+        window.addEventListener('load', (event) => {
+        mensaje = document.getElementById("mensajeflash").value;
+            if(mensaje == "fallido")
+                Swal.fire( 'Error!',
+                    'Usuario y/o contraseña incorrectas!',
+                    'error');
+            if(mensaje.includes('|')){
+                msjCompuesto = mensaje.split('|');
+                if(msjCompuesto[0] == "registroExito"){
+                    Swal.fire( 'Exito!',
+                    'El usuario ' + msjCompuesto[1] + ' se ha registrado correctamente!',
+                    'success');
+                }
+            }
+            if(mensaje == "login_failed")
+                Swal.fire( 'Error!','Debes iniciar sesion para continuar!','error');
+        });
+    </script>
+{% endblock %}

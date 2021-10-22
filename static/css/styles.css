@@ -1,0 +1,132 @@
+body{
+    background-color: rgb(235, 155, 195);
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;  
+}
+body#bodyIndex{
+    display:block;
+}
+main {
+    flex: 1 0 auto;
+}
+.container{
+    background-color: whitesmoke;
+    border: 0.5px solid rgb(131, 131, 131);
+    border-radius: 10px;
+    margin-top: 20px ;
+    margin-bottom: 30px ;
+    padding: 10px 20px;
+}
+.container.login{
+    margin-top: 30px ;
+    width: 30%;
+}
+#header{
+    display: flex;
+    align-items: center;
+    padding: 5px 0px;
+    background-color: white;
+}
+#titulo{
+    margin:0px 80px;
+    color: rgb(0, 89, 255);
+    font-weight: 600;
+}
+.icono {
+    padding: 0px 5px;
+    color:black;
+}
+.col.m4 .flotante_star{
+    background-color: white;
+    position: absolute;
+}
+.col.m4 .flotante_star i{
+    color: #F44336 !important;
+}
+.col.m4 .card-image .flotante_star{
+    left: 237px;
+    bottom: 160px;
+}
+.platopedido .flotante_star{
+    position: absolute;
+    background-color: white;
+    left: 730px;
+    top: 195px;
+}
+.platopedido .flotante_star i{
+    color: #F44336;
+}
+.col.m4 .flotante_star:hover{
+    background-color: #F44336;
+}
+.col.m4 .flotante_star i:hover{
+    color: white !important;
+}
+.col.m3 .flotante_star{
+    position: absolute;
+    background-color: #F44336 !important;
+    left: 175px;
+    bottom: 135px;
+}
+.col.m3 .flotante_star i{
+    color: white;
+}
+.col.m3 .flotante_star:hover{
+    background-color: white;
+}
+.col.m3 .flotante_star i:hover{
+    color: #F44336;
+}
+.card_with2button{
+    display:flex; justify-content: space-between;
+}
+.card_with2button a{
+    width: 48%;
+}
+#menudropdown{
+    width: 155px !important;
+    left: 1190px !important;
+    height: auto !important;
+    top: 55px !important;
+}
+.resumen_orden{
+    border: 2px solid black; 
+    border-radius: 4px;
+}
+.resumen_orden div.row:nth-child(-n + 2){
+    border-bottom: 2px solid black;
+}
+.resumen_orden .s12 p{
+    font-size:20px;
+}
+.sidenav li a{
+    font-size: large;
+}
+.dashboard_innerContent{
+    background-color: white;
+    border: 1px solid black;
+    margin-top: 30px;
+    padding: 20px;
+    position: relative;
+}
+@media screen and (min-width: 992px) {
+    .dashboard_innerContent{
+        left: 300px;
+        width: 78%;
+    }
+}
+@media screen and (max-width: 992px) {
+    .dashboard_innerContent{
+        border-radius: 15px;
+        left: 5%;
+        width: 90%;
+    }
+}
+.brand-logo{
+    padding-left: 15px;
+    padding-top: 5px;
+}
+a.tooltipped i:hover{
+    color:grey;
+}

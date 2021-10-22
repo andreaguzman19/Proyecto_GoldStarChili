@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block contenido %}
+    <div class="row" style="margin: 0px;">
+          <!-- Grey navigation panel -->
+          <ul id="slide-out" class="sidenav sidenav-fixed">
+            <p class="center-align"><img src="/static/img/logo.PNG"></p>
+            <p style="font-size: large;"class="center-align">Hola Administrador</p>
+            <p class="center-align"><img src="/static/img/user.png"></p>
+            <hr>
+            <li><a href="#!">Configuracion de la cuenta</a></li>
+            <li><a href="#!">Gestionar usuario  </a></li>
+            <li><a href="#!">Gestionar platos </a></li>
+            <li><a href="#!">Informes </a></li>
+          </ul>
+  
+        <div class="col dashboard_innerContent" style="padding: 0px 20px 40px 20px;">
+            <h4 class="center-align">Bienvenido al men&uacute; de administrador del restaurante</h4><br>
+            <h6 class="center-align grey-text text-darken-3" style="margin-left: 30px;">Desde los botones de la barra lateral puede navegar entre las distintas funciones que puede ejercer como administrador del restaurante.</h6>
+            <br><hr><br>
+            <p class=" center-align blue-grey-text text-darken-3">Desde la opcion "Configuracion de cuenta" puede acceder a la configuracion de su informacion personal, configuraciones adicionales de la pagina, entre otras...</p>
+        </div>
+  
+    </div>
+{% endblock %}
+{% block scripts %}
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+      <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script>
+          document.addEventListener('DOMContentLoaded', function() {
+              M.AutoInit();
+              var elems = document.querySelectorAll('.dropdown-trigger');
+              var instances = M.Dropdown.init(elems, options);
+          });
+        </script>
+{% endblock %}
