@@ -4,51 +4,37 @@
 <input id="mensajeflash" type="hidden" value="{{message}}">
 {% endfor %} 
     <div class="col dashboard_innerContent" style="padding: 0px 20px 40px 20px;">
-        <h4 class="center-align">Nombre de usuario: <b>{{ usuario["usuario"] }}</b></h4><br>
-        <form method="post">
-            <div class="col s8 push-s2">
-                <div class="input-field col s12 m6">
-                    <input id="nombre" name="nombre" type="text" class="validate" value="{{ datos[0] }}" disabled>
-                    <label for="nombre">Nombre</label>
+        <div class="col s12 m7">
+            <h3 class="header">Historial de pedido</h3>
+            {% for pedido in pedidos %}
+            <div class="card horizontal">
+              <div class="card-stacked">
+                <div class="card-content">
+                    <div class="col m6">
+                        <h4><b>Pedido N°:</b>{{ pedido[0] }}</h4>
+                    </div>
+                    <div class="col m6">
+                        <span>Fecha: {{ pedido[1] }}</span>
+                    </div>
+                    <div class="col m6">
+                        {% if not pedido[2] %}
+                          <p>Estado:En progreso</p>
+                        {% else %}  
+                          <p>Estado:Finalizada</p>
+                        {% endif %}
+                    </div>
+                    <div class="col m6">
+                        <p>Total: $ {{ pedido[3] }} </p>
+                    </div>
                 </div>
-                <div class="input-field col s12 m6">
-                    <input id="apellido" name="apellido" type="text" class="validate" value="{{ datos[1] }}" disabled>
-                    <label for="apellido">Apellido</label>
-                </div>
-                <div class="input-field col s12">
-                    <input id="email" name="email" type="email" class="validate" value="{{ datos[2] }}" disabled>
-                    <label for="email">Correo electronico</label>
-                </div>
-                <div class="input-field col s12">
-                    <input id="telefono" name="telefono" type="tel" class="validate" value="{{ datos[3] }}" disabled>
-                    <label for="telefono">Telefono</label>
-                </div>
-                <div class="input-field col s12">
-                    <input id="fecha_nacimiento" name="fecha_nacimiento" type="text" class="datepicker" value="{{ datos[4] }}" disabled>
-                    <label for="fecha_nacimiento">Fecha de nacimiento</label>
-                </div>
-                <div class="input-field col s12">
-                    <input id="direccion" name="direccion" type="text" class="validate" value="{{ datos[5] }}" disabled>
-                    <label for="direccion">Direccion</label>
-                </div>
-                <div class="col s6 offset-s3" style="margin-bottom: 15px; display: flex; flex-direction: column;">
-                    <a class="waves-effect waves-light btn" onclick="campos()"><i class="material-icons left">edit</i>Editar campos</a>
-                </div>
-                <div class="col s6 offset-s3" style="display: flex; flex-direction: column;">
-                    <button id="guardaCambiosUsuario" class="waves-effect waves-light btn purple" href="/Usuario/" type="submit" disabled><i class="material-icons left">save</i>Guardar cambios</button>
-                </div>
+              </div>
             </div>
-        </form>
-    </div>
+            {% endfor %}
+          </div>
+    </div> 
 {% endblock %}
 {% block scriptsUsuarios %}
     <script>
-        var habilitado = false
-        document.addEventListener('DOMContentLoaded', function() {
-            M.AutoInit();
-            var elems = document.querySelectorAll('.dropdown-trigger');
-            var instances = M.Dropdown.init(elems, options);
-        });
         window.addEventListener('load', (event) => {
             if(document.getElementById("mensajeflash")){
                 mensaje = document.getElementById("mensajeflash").value;
@@ -58,22 +44,5 @@
                     Swal.fire( 'Exito!','La informacion de usuario se ha actualziado correctamente!','success');
             }
         });
-        function campos(){
-            var inputs = document.getElementsByTagName("INPUT");
-            if(habilitado == false){
-                for(let i=0; i < inputs.length ; i++){
-                    inputs[i].removeAttribute("disabled");
-                }
-                document.getElementById("guardaCambiosUsuario").removeAttribute("disabled");
-                habilitado = true;
-            }
-            else{
-                for(let i=0; i < inputs.length ; i++){
-                    inputs[i].setAttribute("disabled","");
-                }
-                document.getElementById("guardaCambiosUsuario").setAttribute("disabled","");
-                habilitado = false;
-            }
-        }
     </script>
 {% endblock %}

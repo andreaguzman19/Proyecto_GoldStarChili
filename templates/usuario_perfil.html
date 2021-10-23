@@ -4,7 +4,7 @@
 <input id="mensajeflash" type="hidden" value="{{message}}">
 {% endfor %} 
     <div class="col dashboard_innerContent" style="padding: 0px 20px 40px 20px;">
-        <h4 class="center-align">Nombre de usuario: <b>{{ usuario["usuario"] }}</b></h4><br>
+        <h4 class="center-align">Nombre de usuario: <b>{{ session["usuario"] }}</b></h4><br>
         <form method="post">
             <div class="col s8 push-s2">
                 <div class="input-field col s12 m6">
@@ -43,12 +43,17 @@
 {% endblock %}
 {% block scriptsUsuarios %}
     <script>
-        var habilitado = false
         document.addEventListener('DOMContentLoaded', function() {
-            M.AutoInit();
-            var elems = document.querySelectorAll('.dropdown-trigger');
-            var instances = M.Dropdown.init(elems, options);
+            var options = {
+                autoClose: true,
+                format: 'yyyy-mm-dd',
+                yearRange: 10,
+                maxDate: new Date(2010,0,1)
+            };
+            var elems = document.querySelector('.datepicker');
+            var instance = M.Datepicker.init(elems, options);
         });
+        var habilitado = false
         window.addEventListener('load', (event) => {
             if(document.getElementById("mensajeflash")){
                 mensaje = document.getElementById("mensajeflash").value;

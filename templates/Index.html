@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 {% block contenido %}
-{% for message in get_flashed_messages() %}
-<input id="mensajeflash" type="hidden" value="{{message}}">
-{% endfor %} 
 <div class="banner">
     <div class="banner-body">
         <h3 class="text-uppercase">Bienvenido a Gold Star Chili</h3>
@@ -34,16 +31,5 @@
 </div>
 {% endblock %}
 {% block scripts %}
-<script>
-	document.addEventListener('DOMContentLoaded', function() {
-        M.AutoInit();
-        var elems = document.querySelectorAll('.dropdown-trigger');
-        var instances = M.Dropdown.init(elems, options);
-    });
-    /*window.addEventListener('load', (event) => {
-        mensaje = document.getElementById("mensajeflash").value;
-            if(mensaje == "exito")
-                Swal.fire( 'Exito!','Usuario logueado correctamente!','success');
-    });*/
-</script>
+
 {% endblock %}

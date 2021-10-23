@@ -71,17 +71,27 @@
     <!-- Compiled and minified JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            M.AutoInit();
-            var elems = document.querySelectorAll('.dropdown-trigger');
-            var instances = M.Dropdown.init(elems, options);
-            });
-            function confirmaPassword(event){
-                if(document.getElementById("password").value != event.value){
-                    document.getElementById("guardarRegistro").setAttribute("disabled","");
-                    alert("Las contraseñas no coinciden");
-                }else{
-                    document.getElementById("guardarRegistro").removeAttribute("disabled");
-                }
+            ///////////////// [DATEPICKER] //////////////////////
+            var options = {
+                autoClose: true,
+                format: 'yyyy-mm-dd',
+                defaultDate: new Date(1995, 0, 1),
+                yearRange: 15,
+                maxDate: new Date(2010,0,1)
+            };
+            var elems = document.querySelector('.datepicker');
+            var instance = M.Datepicker.init(elems, options);
+            ///////////////////// [SELECT] //////////////////////
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems);
+        });
+        function confirmaPassword(event){
+            if(document.getElementById("password").value != event.value){
+                document.getElementById("guardarRegistro").setAttribute("disabled","");
+                alert("Las contraseñas no coinciden");
+            }else{
+                document.getElementById("guardarRegistro").removeAttribute("disabled");
             }
+        }
     </script>
 {% endblock %}

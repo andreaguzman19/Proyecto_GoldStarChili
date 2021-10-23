@@ -1,0 +1,1 @@
+select NIT,nombre,usuario,contrasena,tipousuarios_id,p.id,p.confirmado from usuarios as u left join pedido as p on u.NIT = p.usuarios_nit Where usuario = 'camby';

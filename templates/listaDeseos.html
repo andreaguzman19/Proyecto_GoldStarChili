@@ -17,16 +17,16 @@
                 <div class="col m3 plato">
                     <div class="card hoverable">
                         <div class="card-image">
-                            <img src="/static/img/{{plato['img']}}" height="160px" width="auto">
+                            <img src="/static/img/{{plato[3]}}" class="materialboxed" height="160px" width="auto">
                             <a class="flotante_star btn-floating waves-effect waves-light"><i class="material-icons">star_border</i></a>
                         </div>
                         <div class="card-content">
-                            <span class="card-title platoNombre">{{plato["nombre"]}}</span>
-                            <span style="font-size:22px; font-style: italic;">${{plato["precio"]}}</span>
-                            <a class="waves-effect waves-light tooltipped black-text" data-position="bottom" data-tooltip="detalles del plato" style="margin-left: 30px;" href="/Menu/detalle_plato/{{plato['id_plato']}}"><i class="material-icons">add_circle_outline</i></a>
+                            <span class="card-title platoNombre">{{plato[1]}}</span>
+                            <span style="font-size:22px; font-style: italic;">${{plato[2]}}</span>
+                            <a class="waves-effect waves-light tooltipped black-text" data-position="bottom" data-tooltip="detalles del plato" style="margin-left: 30px;" href="/Menu/detalle_plato/{{plato[0]}}"><i class="material-icons">add_circle_outline</i></a>
                         </div>
                         <div class="card-action" style="display:flex; flex-direction: column;">
-                            <a class="waves-effect waves-light btn" href="/Pedidos/{{plato['id_plato']}}">Pedir</a>
+                            <a class="waves-effect waves-light btn" href="/Lista_deseos/">Pedir</a>
                         </div>
                     </div>
                 </div>
@@ -36,13 +36,11 @@
     </main> 
 {% endblock %}
 {% block scripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            M.AutoInit();
-            var elems = document.querySelectorAll('.dropdown-trigger');
-            var instances = M.Dropdown.init(elems, options);
+            var options = {};
+            var elems = document.querySelectorAll('.materialboxed');
+            var instances = M.Materialbox.init(elems, options);
         });
         function buscarPlato(){
             var platoCard = document.getElementsByClassName("plato");

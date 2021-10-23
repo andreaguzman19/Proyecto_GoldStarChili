@@ -5,14 +5,13 @@
         <!-- Grey navigation panel -->
         <ul id="slide-out" class="sidenav sidenav-fixed">
             <p class="center-align"><a href="/" class="brand-logo"><img src="/static/img/logo.PNG"></a></p>
-            <p class="center-align" style="font-size: large;">Hola {{ usuario["nombre"] }}</p>
+            <p class="center-align" style="font-size: large;">Hola {{ session["nombre"] }}</p>
             <p class="center-align"><img src="/static/img/user.png"></p>
             <hr>
             <li><a active href="/Usuario/">Informacion personal</a></li>
             <li><a href="/Usuario/Cuenta/">Configuracion de la cuenta</a></li>
             <li><a href="/Usuario/Pedidos/">Historial de pedidos</a></li>
-            <li><a href="#!">Gestionar comentarios</a></li>
-            <li><a href="#!">Calificar platos</a></li>
+            <li><a href="/Usuario/Comentarios/">Gestionar comentarios</a></li>
         </ul>
         {% block contenidoUsuario %}
         {% endblock %}

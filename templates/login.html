@@ -27,27 +27,22 @@
 {% endblock %}
 {% block scripts %}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            M.AutoInit();
-            var elems = document.querySelectorAll('.dropdown-trigger');
-            var instances = M.Dropdown.init(elems, options);
-        });
         window.addEventListener('load', (event) => {
-        mensaje = document.getElementById("mensajeflash").value;
-            if(mensaje == "fallido")
-                Swal.fire( 'Error!',
-                    'Usuario y/o contraseña incorrectas!',
-                    'error');
-            if(mensaje.includes('|')){
-                msjCompuesto = mensaje.split('|');
-                if(msjCompuesto[0] == "registroExito"){
-                    Swal.fire( 'Exito!',
-                    'El usuario ' + msjCompuesto[1] + ' se ha registrado correctamente!',
-                    'success');
+            mensaje = document.getElementById("mensajeflash").value;
+                if(mensaje == "fallido")
+                    Swal.fire( 'Error!',
+                        'Usuario y/o contraseña incorrectas!',
+                        'error');
+                if(mensaje.includes('|')){
+                    msjCompuesto = mensaje.split('|');
+                    if(msjCompuesto[0] == "registroExito"){
+                        Swal.fire( 'Exito!',
+                        'El usuario ' + msjCompuesto[1] + ' se ha registrado correctamente!',
+                        'success');
+                    }
                 }
-            }
-            if(mensaje == "login_failed")
-                Swal.fire( 'Error!','Debes iniciar sesion para continuar!','error');
+                if(mensaje == "login_failed")
+                    Swal.fire( 'Error!','Debes iniciar sesion para continuar!','error');
         });
     </script>
 {% endblock %}

@@ -5,27 +5,28 @@
         <div class="row">
             <div class="col m6"><h3 style="margin:20px 0px;">Detalles del plato</h3></div>
         </div>
-        {% if plato != None%}
+        {% if plato != None %}
         <div class="row" id="detalleDelPlato">
-            <div class="col m5">
-               <img src="/static/img/{{plato[4]}}" alt="foto de hamburguesa" width="100%" height="auto">    
+            <div class="col m6">
+               <img src="/static/img/{{plato[4]}}" class="materialboxed" width="100%" height="auto">    
                <h4>Precio: ${{plato[2]}}</h4> 
             </div>
-            <div class="col m5">
+            <div class="col m6">
                 <h5>{{plato[1]}}</h5>
                 <p style="text-align: justify;">{{plato[3]}}</p>
                 <div class="input-field col s12">
                     <textarea id="Observaciones" class="materialize-textarea" placeholder="e.j Sin tomate, sin cebolla"></textarea>
                     <label for="Observaciones">Observaciones:</label>
-
                 </div>
-                <a class="waves-effect waves-light btn" href="/Pedidos/{{plato[0]}}"><img src="/static/img/carrito.png" height="70%" width="auto" style="padding-right: 8px; top:6px; "> Agregar al carrito</a>
-            </div>
-            <div class="col m2">
-                <div class="input-field col s9">
-                    <input id="Cantidad" type="number" step="1" class="validate">
-                    <label for="Cantidad">Cantidad</label>
-                  </div>
+                <div class="col s12">
+                    <div class="input-field col s3">
+                        <input id="Cantidad" type="number" step="1" value="1" class="validate">
+                        <label for="Cantidad">Cantidad</label>
+                    </div>
+                    <div class="input-field col s9">
+                        <a class="waves-effect waves-light btn" href="#"><img src="/static/img/carrito.png" height="70%" width="auto" style="padding-right: 8px; top:6px; "> Agregar al carrito</a>
+                    </div>
+                </div>
             </div>
         </div>
         {% else %}
@@ -35,5 +36,11 @@
     </main>
 {% endblock %}
 {% block scripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var options = {};
+            var elems = document.querySelectorAll('.materialboxed');
+            var instances = M.Materialbox.init(elems, options);
+        });
+    </script>
 {% endblock %}

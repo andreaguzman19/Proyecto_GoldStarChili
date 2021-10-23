@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 {% block contenido %}
+{% for message in get_flashed_messages() %}
+<input id="mensajeflash" type="hidden" value="{{message}}">
+{% endfor %}
+{% if deseos %}
+  {% for deseo in deseos%}
+    <input class="PlatoDeseo" type="hidden" value="{{deseo[0]}}">
+  {% endfor%}
+{% endif %}
     <main>
     <div class="container">
         <div class="row">
@@ -14,39 +22,50 @@
         </div>
         <div class="row">
             {% for plato in platos%}
-            <form action="/Menu" method="POST">
             <div class="col m4 plato">
                 <div class="card hoverable">
                     <div class="card-image">
-                        <img src="/static/img/{{plato[4]}}" height="200px" width="auto">
-                        <a class="flotante_star btn-floating waves-effect waves-light"><i class="material-icons">star_border</i></a>
+                        <img src="/static/img/{{plato[4]}}" class="materialboxed" height="200px" width="auto">
+                        <form class="añadirDeseosForm" action="/Menu" method="POST">
+                            <input id="id_plato" name="id_plato_deseos" type="hidden" value="{{plato[0]}}">
+                            <button class="flotante_star btn-floating waves-effect waves-light" type="submit"><i class="material-icons">star_border</i></button>
+                        </form>
+                        <a id="flotaDeseo" class="flotante_star btn-floating waves-effect waves-light" style="display:none"><i class="material-icons">star_border</i></a>
                     </div>
                     <div class="card-content">
                         <span class="card-title platoNombre">{{plato[1]}}</span>
                         <p style="font-size:22px; font-style: italic;">${{plato[2]}}</p>
                     </div>
                     <div class="card-action card_with2button" >
-                        <input id="id_plato" name="id_plato" type="hidden" value="{{plato[0]}}">
-                        <input id="precio" name="precio" type="hidden" value="{{plato[2]}}">
-                        <button class="waves-effect waves-light btn" type="submit">Agregar</button>
+                        <form action="/Menu" method="POST">
+                            <input id="id_plato" name="id_plato_carrito" type="hidden" value="{{plato[0]}}">
+                            <input id="precio" name="precio" type="hidden" value="{{plato[2]}}">
+                            <button class="waves-effect waves-light btn" type="submit">Agregar</button>
+                        </form>
                         <a class="waves-effect waves-light btn purple" href="/Menu/detalle_plato/{{plato[0]}}">Detalles</a>
                     </div>
                 </div>
             </div>
-            </form>
             {% endfor %}                                                   
         </div>
     </div>
     </main>
 {% endblock %}
 {% block scripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            M.AutoInit();
-            var elems = document.querySelectorAll('.dropdown-trigger');
-            var instances = M.Dropdown.init(elems, options);
+            var options = {};
+            var elems = document.querySelectorAll('.materialboxed');
+            var instances = M.Materialbox.init(elems, options);
+        });
+        window.addEventListener('load', (event) => {
+            mensaje = document.getElementById("mensajeflash").value;
+                if(mensaje == "plato_registrado")
+                    M.toast({html: '<i class="material-icons left">block</i>Plato añadido anteriormente!',classes: 'red lighten-2',displayLength: 3000});
+                if(mensaje == "OK")
+                    M.toast({html: 'Añadido al carrito!',displayLength: 2000});
+            var deseosInputs = document.getElementsByClassName("PlatoDeseo");
+            var forms = document.getElementsByClassName("añadirDeseosForm");
         });
         function buscarPlato(){
             var platoCard = document.getElementsByClassName("plato");

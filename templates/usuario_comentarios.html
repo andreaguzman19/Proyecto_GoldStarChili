@@ -11,12 +11,6 @@
 {% endblock %}
 {% block scriptsUsuarios %}
     <script>
-        var habilitado = false
-        document.addEventListener('DOMContentLoaded', function() {
-            M.AutoInit();
-            var elems = document.querySelectorAll('.dropdown-trigger');
-            var instances = M.Dropdown.init(elems, options);
-        });
         window.addEventListener('load', (event) => {
             if(document.getElementById("mensajeflash")){
                 mensaje = document.getElementById("mensajeflash").value;

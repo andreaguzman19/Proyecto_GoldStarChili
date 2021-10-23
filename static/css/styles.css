@@ -84,12 +84,6 @@ main {
 .card_with2button a{
     width: 48%;
 }
-#menudropdown{
-    width: 155px !important;
-    left: 1190px !important;
-    height: auto !important;
-    top: 55px !important;
-}
 .resumen_orden{
     border: 2px solid black; 
     border-radius: 4px;
@@ -129,4 +123,13 @@ main {
 }
 a.tooltipped i:hover{
     color:grey;
+}
+.circuloCarrito{
+    position: absolute;
+    top:11px;
+    right:60px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #d61a09;
 }

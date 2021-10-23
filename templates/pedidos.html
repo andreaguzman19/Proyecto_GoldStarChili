@@ -22,7 +22,7 @@
                         </div>
                         <div class="row" style="margin-bottom: 0px;">
                             <div class="input-field col m8">
-                                <input id="cantidad_pedido" type="number" step="1" value="1" onchange="calcular()">
+                                <input id="cantidad_pedido" type="number" step="1" minlength="1" value="{{plato[4]}}" onchange="calcular()">
                                 <label for="cantidad_pedido">Cantidad</label>
                             </div>
                         </div>
@@ -77,11 +77,6 @@
 {% endblock %}
 {% block scripts %}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            M.AutoInit();
-            var elems = document.querySelectorAll('.dropdown-trigger');
-            var instances = M.Dropdown.init(elems, options);
-        });
         function calcular(){
             var cant = document.getElementById("cantidad_pedido").value;
             var subtotalPlato = document.getElementById("precio_plato");
