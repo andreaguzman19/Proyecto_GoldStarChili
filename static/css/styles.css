@@ -37,46 +37,32 @@ main {
     padding: 0px 5px;
     color:black;
 }
-.col.m4 .flotante_star{
-    background-color: white;
+.flotante_star{
     position: absolute;
-}
-.col.m4 .flotante_star i{
-    color: #F44336 !important;
 }
 .col.m4 .card-image .flotante_star{
     left: 237px;
     bottom: 160px;
 }
-.platopedido .flotante_star{
-    position: absolute;
-    background-color: white;
-    left: 730px;
-    top: 195px;
-}
-.platopedido .flotante_star i{
-    color: #F44336;
-}
-.col.m4 .flotante_star:hover{
-    background-color: #F44336;
-}
-.col.m4 .flotante_star i:hover{
-    color: white !important;
-}
-.col.m3 .flotante_star{
-    position: absolute;
-    background-color: #F44336 !important;
+.col.m3 .card-image .flotante_star{
     left: 175px;
     bottom: 135px;
 }
-.col.m3 .flotante_star i{
-    color: white;
+.platopedido .flotante_star{
+    left: 508px;
+    top: -13px;
 }
-.col.m3 .flotante_star:hover{
-    background-color: white;
+.flotante_star.white-red:hover{
+    background-color: #F44336 !important;
 }
-.col.m3 .flotante_star i:hover{
-    color: #F44336;
+.flotante_star.white-red i:hover{
+    color: white !important;
+}
+.flotante_star.red-white:hover{
+    background-color: white !important;
+}
+.flotante_star.red-white i:hover{
+    color: #F44336 !important;
 }
 .card_with2button{
     display:flex; justify-content: space-between;
@@ -132,4 +118,11 @@ a.tooltipped i:hover{
     height: 15px;
     border-radius: 50%;
     background: #d61a09;
+}
+.modalImg{
+	background : #000000; 
+	position   : absolute;
+	width      : 100%;
+	height     : 100%;
+	opacity    : 0.8;
 }

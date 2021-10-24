@@ -27,10 +27,10 @@
                     <div class="card-image">
                         <img src="/static/img/{{plato[4]}}" class="materialboxed" height="200px" width="auto">
                         <form class="añadirDeseosForm" action="/Menu" method="POST">
-                            <input id="id_plato" name="id_plato_deseos" type="hidden" value="{{plato[0]}}">
-                            <button class="flotante_star btn-floating waves-effect waves-light" type="submit"><i class="material-icons">star_border</i></button>
+                            <input name="id_plato_deseos" type="hidden" value="{{plato[0]}}">
+                            <button class="flotante_star white white-red btn-floating waves-effect waves-light" type="submit"><i class="material-icons red-text">star_border</i></button>
+                            <input name="deseoActivo" type="hidden" value="false">
                         </form>
-                        <a id="flotaDeseo" class="flotante_star btn-floating waves-effect waves-light" style="display:none"><i class="material-icons">star_border</i></a>
                     </div>
                     <div class="card-content">
                         <span class="card-title platoNombre">{{plato[1]}}</span>
@@ -38,8 +38,8 @@
                     </div>
                     <div class="card-action card_with2button" >
                         <form action="/Menu" method="POST">
-                            <input id="id_plato" name="id_plato_carrito" type="hidden" value="{{plato[0]}}">
-                            <input id="precio" name="precio" type="hidden" value="{{plato[2]}}">
+                            <input name="id_plato_carrito" type="hidden" value="{{plato[0]}}">
+                            <input name="precio" type="hidden" value="{{plato[2]}}">
                             <button class="waves-effect waves-light btn" type="submit">Agregar</button>
                         </form>
                         <a class="waves-effect waves-light btn purple" href="/Menu/detalle_plato/{{plato[0]}}">Detalles</a>
@@ -59,14 +59,32 @@
             var instances = M.Materialbox.init(elems, options);
         });
         window.addEventListener('load', (event) => {
-            mensaje = document.getElementById("mensajeflash").value;
-                if(mensaje == "plato_registrado")
-                    M.toast({html: '<i class="material-icons left">block</i>Plato añadido anteriormente!',classes: 'red lighten-2',displayLength: 3000});
-                if(mensaje == "OK")
-                    M.toast({html: 'Añadido al carrito!',displayLength: 2000});
+            if(document.getElementById("mensajeflash")){
+                mensaje = document.getElementById("mensajeflash").value;
+                    if(mensaje == "plato_registrado")
+                        M.toast({html: '<i class="material-icons left">block</i>Plato añadido anteriormente!',classes: 'red lighten-2',displayLength: 3000});
+                    if(mensaje == "OK")
+                        M.toast({html: 'Añadido al carrito!',displayLength: 2000});
+                    if(mensaje == "deseo_OK")
+                        M.toast({html: 'Añadido a lista de deseos!',displayLength: 2200});
+                    if(mensaje == "borrar_deseo")
+                        M.toast({html: '<i class="material-icons left">clear</i>Plato eliminado de lista de deseos!',classes: 'red lighten-2',displayLength: 3000});
+            }
             var deseosInputs = document.getElementsByClassName("PlatoDeseo");
             var forms = document.getElementsByClassName("añadirDeseosForm");
-            
+            for(let i=0; i < forms.length; i++){
+                if(deseosInputs.length > 0){
+                    for(let j=0;j < deseosInputs.length;j++){
+                        if(forms[i].firstElementChild.value == deseosInputs[j].value){
+                            forms[i].lastElementChild.value = "true";
+                            forms[i].children[1].className = 'flotante_star red red-white btn-floating waves-effect waves-light';
+                            forms[i].children[1].firstElementChild.className = 'material-icons white-text';
+                            deseosInputs[j].remove();
+                        }
+                    }
+                }else
+                    break;
+            }
         });
         function buscarPlato(){
             var platoCard = document.getElementsByClassName("plato");

@@ -1,11 +1,39 @@
 {% extends "base.html" %}
 {% block contenido %}
-<div class="banner">
+<!--<div class="banner">
     <div class="banner-body">
         <h3 class="text-uppercase">Bienvenido a Gold Star Chili</h3>
         <p>Los mejores platillos y la mejor calidad los encuentras en Gold Star Chili</p>
         <a class="waves-effect waves-light btn" href="/Menu"><i class="material-icons left">restaurant_menu</i>Ir al menu</a>
     </div>
+</div>-->
+<div class="slider">
+    <ul class="slides">
+      <li>
+        <img src="/static/img/banner1.png" style="opacity: 0.7;">
+        <div class="caption center-align">
+            <h3>Bienvenido a Gold Star Chili!</h3>
+            <h5 class="light grey-text text-lighten-3">El mejor restaurante de la region.</h5>
+            <a class="waves-effect waves-light btn" href="/Menu"><i class="material-icons left">restaurant_menu</i>Ir al menu</a>
+        </div>
+      </li>
+      <li>
+        <img src="/static/img/banner2.jpg" style="opacity: 0.7;">
+        <div class="caption left-align">
+            <h3>Bienvenido a Gold Star Chili!</h3>
+            <h5 class="light grey-text text-lighten-3">El mejor restaurante de la region.</h5>
+            <a class="waves-effect waves-light btn" href="/Menu"><i class="material-icons left">restaurant_menu</i>Ir al menu</a>
+        </div>
+      </li>
+      <li>
+        <img src="/static/img/banner3.jpeg" style="opacity: 0.7;">
+        <div class="caption right-align">
+            <h3>Bienvenido a Gold Star Chili!</h3>
+            <h5 class="light grey-text text-lighten-3">El mejor restaurante de la region.</h5>
+            <a class="waves-effect waves-light btn" href="/Menu"><i class="material-icons left">restaurant_menu</i>Ir al menu</a>
+        </div>
+      </li>
+    </ul>
 </div>
 
 <div class="container" style="padding: 0px 30px;">
@@ -31,5 +59,12 @@
 </div>
 {% endblock %}
 {% block scripts %}
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var options ={indicators: false,
+        height: 500 };
+        var elems = document.querySelectorAll('.slider');
+        var instances = M.Slider.init(elems, options);
+    });
+</script>
 {% endblock %}

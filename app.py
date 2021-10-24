@@ -93,9 +93,19 @@ def mostrarMenu():
         if request.method == 'POST':
             if not request.form.get('precio'):
                 id_plato = request.form.get('id_plato_deseos')
-                statement = "INSERT INTO deseos (platos_id,usuarios_nit) VALUES ( ? , ? );"
-                parametros = (id_plato,session["nit"])
-                row_id = modificarBD(statement,parametros)
+                deseoActivo = request.form.get('deseoActivo')
+                limpiarMensajes()
+                if deseoActivo == "false":
+                    statement = "INSERT INTO deseos (platos_id,usuarios_nit) VALUES ( ? , ? );"
+                    parametros = (id_plato,session["nit"])
+                    row_id = modificarBD(statement,parametros)
+                    flash("deseo_OK")
+                else:
+                    statement = "DELETE FROM deseos WHERE platos_id = ? AND usuarios_nit = ?;"
+                    parametros = (id_plato,session["nit"])
+                    row_id = modificarBD(statement,parametros)
+                    flash("borrar_deseo")      
+
             else:
                 id_plato = request.form.get('id_plato_carrito')
                 precio = request.form.get('precio')
@@ -132,18 +142,44 @@ def detallesPlatoID(id_plato=None):
         plato = None
     return render_template('detalle.html',titulo='Detalles del plato',plato=plato)
 
-@app.route('/Lista_deseos/')
+@app.route('/Lista_deseos/',methods=["GET","POST"])
 def listarDeseos():
     platillos=[]
     if es_usuario():
+        if request.method == "POST":
+            id_plato = request.form.get('id_plato')
+            statement = "DELETE FROM deseos WHERE platos_id = ? AND usuarios_nit = ?;"
+            parametros = (id_plato,session["nit"])
+            row_id = modificarBD(statement,parametros)
         statement = "SELECT p.id,nombre,precio,imagen FROM deseos as d INNER JOIN platos p ON d.platos_id = p.id WHERE usuarios_nit = ?;"
         platillos = consultarBD(statement,[(session["nit"])])
+    else:
+        limpiarMensajes()
+        flash('login_failed')
+        redirect("/Login")
     return render_template('listaDeseos.html',titulo='Lista de Deseos',platos=platillos)
 
-@app.route('/Pedidos/')
+@app.route('/Pedidos/',methods=["GET","POST"])
 def pedidos():
     detalles=[]
     if es_usuario():
+        if request.method == "POST":
+            solicitud = request.form.get('request')
+            if solicitud == 'borraDetalle':
+                id_plato_borrar = request.form.get('id_plato_borrar')
+                statement = "DELETE FROM detalles_plato WHERE platos_id = ? AND pedido_id = ?;"
+                parametros = (id_plato_borrar,session["pedido"])
+                row_id = modificarBD(statement,parametros)
+            else:
+                if solicitud == 'confirmaPedido':
+                    total = request.form.get('total_confirmado')
+                    statement = 'UPDATE pedido SET total = ?, Confirmado = ? WHERE id = ?';
+                    parametros = (total,True,session["pedido"])
+                    row_id = modificarBD(statement,parametros)
+                    session["pedido"] = None
+                    limpiarMensajes()
+                    flash("pedidoConfirmado")
+                    return redirect('/Usuario/Pedidos/')
         if session["pedido"] != None:
             statement = "SELECT p.id, nombre, precio, imagen,cantidad,subtotal FROM platos as p inner join detalles_plato dp ON p.id = dp.platos_id where dp.pedido_id = ?;"
             parametros = [(session["pedido"])]
@@ -154,13 +190,13 @@ def pedidos():
 def perfilUsuario():
     if es_usuario():
         if request.method == "POST":
-            statement="UPDATE usuarios SET nombre = ?,apellido = ?,telefono = ?,correoelectronico = ?,fechanacimiento = ?,direccion = ? WHERE NIT = ?"
             nombre = request.form.get("nombre")
             apellido = request.form.get("apellido")
             telefono = request.form.get("telefono")
             email = request.form.get("email")
             f_nacimiento = request.form.get("fecha_nacimiento")
             direccion = request.form.get("direccion")
+            statement="UPDATE usuarios SET nombre = ?,apellido = ?,telefono = ?,correoelectronico = ?,fechanacimiento = ?,direccion = ? WHERE NIT = ?"
             parametros=(nombre,apellido,telefono,email,f_nacimiento,direccion,session['nit'])
             row_id = modificarBD(statement,parametros)
             limpiarMensajes()
@@ -201,18 +237,37 @@ def configuracionUsuario():
     flash("login_failed")
     return redirect('/Login')
 
-@app.route('/Usuario/Pedidos/')
+@app.route('/Usuario/Pedidos/',methods=["GET","POST"])
 def pedidosUsuarios():
     if es_usuario():
         statement="SELECT id,fecha,confirmado,total FROM pedido WHERE usuarios_nit=?;"
         parametros=(session["nit"],)
         pedidos = consultarBD(statement,parametros)
+        for i in range(len(pedidos)):
+            statement="SELECT imagen,nombre,cantidad,precio,id FROM detalles_plato as dp inner join platos as p ON dp.platos_id = p.id WHERE dp.pedido_id = ?;"
+            parametros=(pedidos[i][0],)
+            pedidos[i] = pedidos[i] + ((consultarBD(statement,parametros)),)
+        if request.method == "POST":
+            id_plato = request.form.get('id_plato')
+            comentario = request.form.get('comentario')
+            statement = "INSERT INTO comentarios (usuarios_nit,platos_id,comentario) VALUES (?,?,?);"
+            parametros = (session["nit"],id_plato,comentario)
+            row_id = modificarBD(statement,parametros)
         return render_template('usuario_pedidos.html',titulo='Pedidos del usuario',pedidos=pedidos)
+    limpiarMensajes()
+    flash('login_failed')
     return redirect('/Login')
 
-@app.route('/Usuario/Comentarios/')
+@app.route('/Usuario/Comentarios/',methods=["GET","POST"])
 def gestionComentarios():
-    return render_template('usuario_comentarios.html',titulo='Gestionar comentarios')
+    if es_usuario():
+        statement="SELECT u.apellido,comentario,p.nombre as nombrePlato FROM comentarios as c inner join usuarios as u ON c.usuarios_nit = u.nit inner join platos as p ON p.id = c.platos_id WHERE u.nit = ?;"
+        parametros=(session["nit"],)
+        comentarios = consultarBD(statement,parametros)
+        return render_template('usuario_comentarios.html',titulo='Gestionar comentarios',comentarios=comentarios)
+    limpiarMensajes()
+    flash('login_failed')
+    return redirect('/Login')
 
 @app.route('/Usuario/Administrador')
 def ingresoAdministrador():
@@ -225,30 +280,34 @@ def gestionUsuarios():
 ### Funciones
 def consultarBD(query,params):
     if(query != ''):
+        valid = False
         try:
             sqliteConnection = sqlite3.connect('./data/GoldStar.sqlite')
             cursor = sqliteConnection.cursor()
-
             if params:
                 cursor.execute(query,params)
             else:
                 cursor.execute(query)
             result = cursor.fetchall()
             cursor.close()
+            valid = True
         except sqlite3.Error as error:
             print("Error while connecting to sqlite", error)
         finally:
             if sqliteConnection:
                 sqliteConnection.close()
                 print("The SQLite connection is closed")
-            return result
+            if valid:
+                return result
+            else:
+                return []
 
 def modificarBD(statement,params):
     if(statement != ''):
+        valid = False
         try:
             sqliteConnection = sqlite3.connect('./data/GoldStar.sqlite')
             cursor = sqliteConnection.cursor()
-
             if params:
                 cursor.execute(statement,params)
             else:
@@ -256,6 +315,7 @@ def modificarBD(statement,params):
             sqliteConnection.commit()
             row_id = cursor.lastrowid
             cursor.close()
+            valid = True
         except sqlite3.Error as error:
             if  str(error) == 'UNIQUE constraint failed: detalles_plato.platos_id, detalles_plato.pedido_id':
                 return "plato_registrado"
@@ -264,7 +324,10 @@ def modificarBD(statement,params):
             if sqliteConnection:
                 sqliteConnection.close()
                 print("The SQLite connection is closed")
-        return row_id
+            if valid:
+                return row_id
+            else:
+                return None
 
 def login_user(usuario,pedido):
     session["nit"] = usuario[0]

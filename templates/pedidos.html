@@ -11,8 +11,12 @@
         <div class="row">
             <div class="col m7 platos_del_carro">
                 {% for plato in platos %}
-                  <div class="row hoverable platopedido">
-                    <a class="flotante_star btn-floating btn-small waves-effect waves-light" onclick="eliminarPlato(this)"><i class="material-icons">close</i></a>
+                  <div class="row card hoverable platopedido" style="margin-bottom: 20px;">
+                    <form action="/Pedidos/" method="post">
+                        <input id="id_plato_borrar" type="hidden" name="id_plato_borrar" value="{{plato[0]}}">
+                        <input type="hidden" name="request" value="borraDetalle">
+                        <button class="flotante_star white white-red btn-floating btn-small waves-effect waves-light" type="submit"><i class="material-icons red-text">close</i></button>
+                    </form>
                     <div class="col m7" style="margin-top: 15px;">
                         <img src="/static/img/{{plato[3]}}" width="100%">
                     </div>
@@ -22,18 +26,17 @@
                         </div>
                         <div class="row" style="margin-bottom: 0px;">
                             <div class="input-field col m8">
-                                <input id="cantidad_pedido" type="number" step="1" minlength="1" value="{{plato[4]}}" onchange="calcular()">
+                                <input id="cantidad_pedido" name="cantidad_pedido" type="number" step="1" min="1" value="{{plato[4]}}">
                                 <label for="cantidad_pedido">Cantidad</label>
                             </div>
                         </div>
                         <div class="row right-align">
                             <span style="font-size: x-large; font-weight: bold;">Subtotal $</span >
-                            <span id="precio_plato" style="font-size: larger; font-style: italic;">{{plato[2]}}</span >
-                            <input id="precio_real" type="hidden" value="{{plato[2]}}"></input >
+                            <span style="font-size: larger; font-style: italic; margin-right: 10px;">{{plato[2]}}</span >
+                            <input class="subtotal_plato" type="hidden" value="{{plato[2]}}"></input >
                         </div>
                     </div>
                   </div>
-                  <hr>
                 {% endfor %}
                 
             </div>
@@ -43,11 +46,11 @@
                 </div>
                 <div class="row" >
                     <div class="col s12" style="display: flex; justify-content: space-around;">
-                        
-                         <p>Subtotal</p><p id="pedido_subtotal">$ </p>
-                        
-                        <p>Subtotal</p><p id="pedido_subtotal">$ 0</p>
-                        
+                        {% if 'pedido' in session %}
+                        <p>Subtotal  </p><p id="pedido_subtotal">$ </p>
+                        {% else %}
+                        <p>Subtotal  $ 0</p>
+                        {% endif %}
                     </div>
                     <div class="col s12" style="display: flex; justify-content: space-around;"> 
                         <p>Envio</p><p>$ 5000</p>
@@ -55,19 +58,20 @@
                 </div>
                 <div class="row">
                     <div class="col s12" style="display: flex; justify-content: space-around; margin-bottom:15px;">
-                        
-                         <span style="font-size:25px; font-weight: bold;">Total</span><span style="font-size:25px; font-weight: bold;" id="pedido_total">$ </span>
-                        
-                         <span style="font-size:25px; font-weight: bold;">Total</span><span style="font-size:25px; font-weight: bold;" id="pedido_total">$ 0</span>
-                        
+                        {% if 'pedido' in session%}
+                        <span style="font-size:25px; font-weight: bold;">Total  </span>
+                        <span style="font-size:25px; font-weight: bold;" id="pedido_total">$ </span>
+                        {% else %}
+                        <span style="font-size:25px; font-weight: bold;">Total  $ 0</span>
+                        {% endif %}
                     </div>
                     <div class="col s12" style="display: flex;flex-direction: column;align-items: center;">
                         <a class="waves-effect waves-light btn"><i class="material-icons left">credit_card</i>Metodo de pago</a>
-                        <a class="waves-effect waves-light btn" style="margin-top: 10px;" onclick="Swal.fire(
-                            'Pedido confirmado!',
-                            'en minutos sale el domi!',
-                            'success'
-                          );">Confirmar pedido</a>
+                        <form action="/Pedidos/" method="post">
+                            <input id="total_confirmado" type="hidden" name="total_confirmado" value="">
+                            <input type="hidden" name="request" value="confirmaPedido">
+                            <button class="waves-effect waves-light btn" style="margin-top: 10px;" type="submit">Confirmar pedido</button>
+                        </form>
                     </div>
                 </div>
             </div> 
@@ -77,35 +81,15 @@
 {% endblock %}
 {% block scripts %}
     <script>
-        function calcular(){
-            var cant = document.getElementById("cantidad_pedido").value;
-            var subtotalPlato = document.getElementById("precio_plato");
-            var subtotalField = document.getElementById("pedido_subtotal");
-            var totalField = document.getElementById("pedido_total");
-            var precio = document.getElementById("precio_real");
-            subtotalField.innerText = "$ " + (parseInt(precio.value) * parseInt(cant)).toString();
-            totalField.innerText = "$" + ((parseInt(precio.value) * parseInt(cant)) + 5000).toString();
-            subtotalPlato.innerText = (parseInt(precio.value) * parseInt(cant)).toString();
-        }
-        function eliminarPlato(element){
-            var padre = element.parentNode.parentNode;
-            var elim = element.parentNode;
-            var subtotalField = document.getElementById("pedido_subtotal");
-            var totalField = document.getElementById("pedido_total"); 
-            padre.removeChild(elim);
-            subtotalField.innerText = "$ 0";
-            totalField.innerText = "$ 0";
-            const carrovacio = document.createElement("h3");
-            carrovacio.innerText = " El carrito esta vacio ... ";
-            carrovacio.style.fontWeight = "bolder";
-            padre.appendChild(carrovacio);
-        }
         window.addEventListener('load', (event) => {
-        mensaje = document.getElementById("mensajeflash").value;
-            if(mensaje == "login_failed")
-                Swal.fire( 'Error!',
-                    'Debes iniciar sesion para ver tu carrito de compras!',
-                    'error');      
+            var subtotalesInput = document.getElementsByClassName("subtotal_plato");
+            var subtotal = 0;
+            for(let i=0; i < subtotalesInput.length;i++){
+                subtotal = subtotal + parseInt(subtotalesInput[i].value);
+            }
+            document.getElementById("pedido_subtotal").innerText += " " + subtotal.toString();
+            document.getElementById("pedido_total").innerText += " " + (subtotal+5000).toString();
+            document.getElementById("total_confirmado").value = (subtotal+5000).toString();
         });
     </script>
 {% endblock %}

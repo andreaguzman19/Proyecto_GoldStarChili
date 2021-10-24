@@ -1,14 +1,12 @@
 :root{
 	--header-height: 60px;
 }
-
-
 /*Estilos del banner*/
 .banner{
 	height: calc(100vh - var(--header-height));	
 	position: relative;
 	background-position: center;
-	background-image: url('../img/Bienvenida_img1.jpg');
+	background-image: url('/static/img/banner1.png');
 	background-size: cover;
 	animation: banner 15s infinite linear;
 }
@@ -33,25 +31,25 @@
 }
 @keyframes banner{
 	10%{
-		background-image: url('../img/Bienvenida_img1.jpg');
+		background-image: url('/static/img/banner1.png');
 	}
 	43%{
-		background-image: url('../img/Bienvenida_img2.jpg');
+		background-image: url('/static/img/banner2.jpg');
 	}
 
 
 	54%{
-		background-image: url('../img/Bienvenida_img2.jpg');
+		background-image: url('/static/img/banner2.jpg');
 	}
 	66%{
-		background-image: url('../img/Bienvenida_img2.jpg');
+		background-image: url('/static/img/banner2.jpg');
 	}
 
 
 	67%{
-		background-image: url('../img/Bienvenida_img3.jpg');
+		background-image: url('/static/img/banner3.jpeg');
 	}
 	100%{
-		background-image: url('../img/Bienvenida_img3.jpg');
+		background-image: url('/static/img/banner3.jpeg');
 	}
 }

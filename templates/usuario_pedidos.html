@@ -4,30 +4,55 @@
 <input id="mensajeflash" type="hidden" value="{{message}}">
 {% endfor %} 
     <div class="col dashboard_innerContent" style="padding: 0px 20px 40px 20px;">
-        <div class="col s12 m7">
+        <div class="col s12 m10">
             <h3 class="header">Historial de pedido</h3>
             {% for pedido in pedidos %}
-            <div class="card horizontal">
-              <div class="card-stacked">
-                <div class="card-content">
-                    <div class="col m6">
-                        <h4><b>Pedido N°:</b>{{ pedido[0] }}</h4>
+            <div class="card">
+                <div class="card-image">
+                    <div class="col s12 m6">
+                        <h4 style="margin-left: 20px;"><b>Pedido N°: </b>{{ pedido[0] }}</h4>
                     </div>
-                    <div class="col m6">
-                        <span>Fecha: {{ pedido[1] }}</span>
-                    </div>
-                    <div class="col m6">
-                        {% if not pedido[2] %}
-                          <p>Estado:En progreso</p>
-                        {% else %}  
-                          <p>Estado:Finalizada</p>
-                        {% endif %}
-                    </div>
-                    <div class="col m6">
-                        <p>Total: $ {{ pedido[3] }} </p>
+                    <div class="input-field col s12 m6">
+                        <span style="font-size: large;"><b>Fecha: </b>{{ pedido[1] }}</span>
+                        <div class="col s12">
+                            {% if not pedido[2] %}
+                              <span style="font-size: large;"><b>Estado: </b><span style="font-size: large; font-weight: 600;" class="red-text">En progreso</span></span>
+                            {% else %}  
+                              <span style="font-size: large;"><b>Estado: </b><span style="font-size: large; font-weight: 600;" class="green-text">Finalizada</span></span>
+                            {% endif %}
+                        </div>
+                        <div class="col s12">
+                            <span style="font-size: larger;"><b>Total: </b>$ {{ pedido[3] }} </span>
+                        </div>
                     </div>
                 </div>
-              </div>
+                <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">Detalles del pedido<i class="material-icons right">more_vert</i></span>
+                </div>
+                <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Detalles del pedido<i class="material-icons right">close</i></span>
+                    {% for detalle in pedido[4] %}
+                        <div class="col s12">
+                            <div class="input-field col s2">
+                                <img src="/static/img/{{detalle[0]}}" class="material-boxed" width="90px">
+                            </div>
+                            <div class="input-field col s5">
+                                <span style="font-size: larger; font-weight: 600;">{{detalle[1]}}</span><br>
+                                <span style="font-size: large;"><b>Cant.:</b>{{detalle[2]}}</span><br>
+                                <span style="font-size: large;"><b>Subtotal: </b>{{detalle[3]}}</span>
+                            </div>
+                            <div class="input-field col s5">
+                                <form id="formAddComentario" method="post" href="/Usuario/Pedidos/">
+                                    <a id="btnAgregaComent" class="btn waves-effect waves-light" onclick="agregaComentario(this)">
+                                        <i class="material-icons left">comment</i>Agregar Comentario
+                                    </a>
+                                    <input type="hidden" name="id_plato" value="{{detalle[4]}}">
+                                    <input type="hidden" name="comentario" id="comentario" value="">
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor%}
+                </div>
             </div>
             {% endfor %}
           </div>
@@ -38,11 +63,25 @@
         window.addEventListener('load', (event) => {
             if(document.getElementById("mensajeflash")){
                 mensaje = document.getElementById("mensajeflash").value;
-                if(mensaje == "exito")
-                    Swal.fire( 'Exito!','Usuario logueado correctamente!','success');
-                if(mensaje == "usuarioActualizado")
-                    Swal.fire( 'Exito!','La informacion de usuario se ha actualziado correctamente!','success');
+                if(mensaje == "pedidoConfirmado")
+                    Swal.fire( 'Exito!','Pedido Confirmado!','success');
             }
         });
+        async function agregaComentario(elem){
+            const { value: comentario } = await Swal.fire({
+                input: 'textarea',
+                inputLabel: 'Agrega el comentario al plato',
+                inputPlaceholder: 'Comentario aqui...',
+                inputAttributes: {
+                    'aria-label': 'Comentario aqui'
+                },
+                showCancelButton: true
+            });
+
+            if (comentario) {
+                elem.parentNode.lastElementChild.value = comentario;
+                elem.parentNode.submit();
+            }
+        }
     </script>
 {% endblock %}

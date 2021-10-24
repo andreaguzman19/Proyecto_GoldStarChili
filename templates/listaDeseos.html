@@ -18,7 +18,10 @@
                     <div class="card hoverable">
                         <div class="card-image">
                             <img src="/static/img/{{plato[3]}}" class="materialboxed" height="160px" width="auto">
-                            <a class="flotante_star btn-floating waves-effect waves-light"><i class="material-icons">star_border</i></a>
+                            <form action="/Lista_deseos/" method="post">
+                                <input id="id_plato" type="hidden" name="id_plato" value="{{plato[0]}}">
+                                <button class="flotante_star red red-white btn-floating waves-effect waves-light" type="submit"><i class="material-icons white-text">star_border</i></button>
+                            </form>
                         </div>
                         <div class="card-content">
                             <span class="card-title platoNombre">{{plato[1]}}</span>
@@ -26,7 +29,11 @@
                             <a class="waves-effect waves-light tooltipped black-text" data-position="bottom" data-tooltip="detalles del plato" style="margin-left: 30px;" href="/Menu/detalle_plato/{{plato[0]}}"><i class="material-icons">add_circle_outline</i></a>
                         </div>
                         <div class="card-action" style="display:flex; flex-direction: column;">
-                            <a class="waves-effect waves-light btn" href="/Lista_deseos/">Pedir</a>
+                            <form action="/Menu" method="POST">
+                                <input name="id_plato_carrito" type="hidden" value="{{plato[0]}}">
+                                <input name="precio" type="hidden" value="{{plato[2]}}">
+                                <button class="waves-effect waves-light btn" type="submit">Pedir</button>
+                            </form>
                         </div>
                     </div>
                 </div>
