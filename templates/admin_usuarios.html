@@ -1,0 +1,48 @@
+{% extends "baseUsuarios.html" %}
+{% block contenidoUsuario %}
+{% for message in get_flashed_messages() %}
+<input id="mensajeflash" type="hidden" value="{{message}}">
+{% endfor %} 
+    <div class="col dashboard_innerContent" style="padding: 0px 20px 40px 20px;">
+        <h4 class="center-align">Gestion de usuarios del sistema</h4><br>
+        <table class="striped highlight" style="border: 1px solid rgb(141, 200, 204);">
+            <thead style="background-color: skyblue;">
+                <tr>
+                    <th>NIT</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Telefono</th>
+                    <th>Correo Electronico</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Direccion</th>
+                    <th>Usuario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario[0] }}</td>
+                    <td>{{ usuario[1] }}</td>
+                    <td>{{ usuario[2] }}</td>
+                    <td>{{ usuario[3] }}</td>
+                    <td>{{ usuario[4] }}</td>
+                    <td>{{ usuario[5] }}</td>
+                    <td>{{ usuario[6] }}</td>
+                    <td>{{ usuario[7] }}</td>
+                    <td>
+                        <a class="waves-effect waves-light btn red lighten-2" href="/Usuario/Administrador/GestionarUsuarios/Borra/{{usuario[0]}}"><i class="material-icons">delete</i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block scriptsUsuarios %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var options = {};
+        });
+    </script>
+{% endblock %}

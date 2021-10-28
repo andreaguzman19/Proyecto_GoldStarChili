@@ -29,11 +29,7 @@
                             <a class="waves-effect waves-light tooltipped black-text" data-position="bottom" data-tooltip="detalles del plato" style="margin-left: 30px;" href="/Menu/detalle_plato/{{plato[0]}}"><i class="material-icons">add_circle_outline</i></a>
                         </div>
                         <div class="card-action" style="display:flex; flex-direction: column;">
-                            <form action="/Menu" method="POST">
-                                <input name="id_plato_carrito" type="hidden" value="{{plato[0]}}">
-                                <input name="precio" type="hidden" value="{{plato[2]}}">
-                                <button class="waves-effect waves-light btn" type="submit">Pedir</button>
-                            </form>
+                            <a class="waves-effect waves-light btn" href="/Menu/{{plato[0]}}/1">Pedir</a>
                         </div>
                     </div>
                 </div>

@@ -20,11 +20,11 @@
                 </div>
                 <div class="col s12">
                     <div class="input-field col s3">
-                        <input id="Cantidad" type="number" step="1" value="1" class="validate">
+                        <input id="Cantidad" type="number" value="1" class="validate" onchange="cambiaCantidad(this)">
                         <label for="Cantidad">Cantidad</label>
                     </div>
                     <div class="input-field col s9">
-                        <a class="waves-effect waves-light btn" href="#"><img src="/static/img/carrito.png" height="70%" width="auto" style="padding-right: 8px; top:6px; "> Agregar al carrito</a>
+                        <a id="agregaPlato" class="waves-effect waves-light btn" href="/Menu/{{plato[0]}}/1"><img src="/static/img/carrito.png" height="70%" width="auto" style="padding-right: 8px; top:6px; "> Agregar al carrito</a>
                     </div>
                 </div>
             </div>
@@ -42,5 +42,18 @@
             var elems = document.querySelectorAll('.materialboxed');
             var instances = M.Materialbox.init(elems, options);
         });
+        function cambiaCantidad(input){
+            var boton = document.getElementById("agregaPlato");
+            if(input.value > 0){
+                var href = boton.getAttribute("href");
+                var referencias = href.split('/');
+                referencias[3] = input.value;
+                href = referencias.join('/');
+                boton.setAttribute("href",href);
+                boton.removeAttribute("disabled");
+            }else{
+                boton.setAttribute("disabled","");
+            }
+        }
     </script>
 {% endblock %}

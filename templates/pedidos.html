@@ -18,7 +18,7 @@
                         <button class="flotante_star white white-red btn-floating btn-small waves-effect waves-light" type="submit"><i class="material-icons red-text">close</i></button>
                     </form>
                     <div class="col m7" style="margin-top: 15px;">
-                        <img src="/static/img/{{plato[3]}}" width="100%">
+                        <img src="/static/img/{{plato[2]}}" width="100%">
                     </div>
                     <div class="col m5">
                         <div class="row" style = "margin-bottom: 0px;">
@@ -26,19 +26,20 @@
                         </div>
                         <div class="row" style="margin-bottom: 0px;">
                             <div class="input-field col m8">
-                                <input id="cantidad_pedido" name="cantidad_pedido" type="number" step="1" min="1" value="{{plato[4]}}">
+                                <input id="cantidad_pedido" name="cantidad_pedido" type="number" min="1" value="{{plato[3]}}" onchange="actualizaDetalle(this)">
                                 <label for="cantidad_pedido">Cantidad</label>
                             </div>
                         </div>
                         <div class="row right-align">
+                            <input class="precio_plato" type="hidden" value="{{plato[5]}}">
+                            <input class="id_plato_actualizar" type="hidden" value="{{plato[0]}}">
                             <span style="font-size: x-large; font-weight: bold;">Subtotal $</span >
-                            <span style="font-size: larger; font-style: italic; margin-right: 10px;">{{plato[2]}}</span >
-                            <input class="subtotal_plato" type="hidden" value="{{plato[2]}}"></input >
+                            <span style="font-size: larger; font-style: italic; margin-right: 10px;">{{plato[4]}}</span >
+                            <input class="subtotal_plato" type="hidden" value="{{plato[4]}}"></input >
                         </div>
                     </div>
                   </div>
-                {% endfor %}
-                
+                {% endfor %}  
             </div>
             <div class="col m4 offset-m1 resumen_orden">
                 <div class="row" style="background-color: rgb(84, 9, 128);">
@@ -47,7 +48,7 @@
                 <div class="row" >
                     <div class="col s12" style="display: flex; justify-content: space-around;">
                         {% if 'pedido' in session %}
-                        <p>Subtotal  </p><p id="pedido_subtotal">$ </p>
+                        <p>Subtotal  </p><p id="pedido_subtotal"></p>
                         {% else %}
                         <p>Subtotal  $ 0</p>
                         {% endif %}
@@ -60,7 +61,7 @@
                     <div class="col s12" style="display: flex; justify-content: space-around; margin-bottom:15px;">
                         {% if 'pedido' in session%}
                         <span style="font-size:25px; font-weight: bold;">Total  </span>
-                        <span style="font-size:25px; font-weight: bold;" id="pedido_total">$ </span>
+                        <span style="font-size:25px; font-weight: bold;" id="pedido_total"></span>
                         {% else %}
                         <span style="font-size:25px; font-weight: bold;">Total  $ 0</span>
                         {% endif %}
@@ -87,9 +88,30 @@
             for(let i=0; i < subtotalesInput.length;i++){
                 subtotal = subtotal + parseInt(subtotalesInput[i].value);
             }
-            document.getElementById("pedido_subtotal").innerText += " " + subtotal.toString();
-            document.getElementById("pedido_total").innerText += " " + (subtotal+5000).toString();
-            document.getElementById("total_confirmado").value = (subtotal+5000).toString();
+            cargarTotal(subtotal);
         });
+        function actualizaDetalle(input){
+            var cantidad = input.value;
+            if(cantidad < 1)
+                cantidad = 1;
+            var contenedor = input.parentNode.parentNode.parentNode.children[2];
+            var precio = contenedor.children[0].value;
+            var id = contenedor.children[1].value;
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                var respuesta = JSON.parse(this.response)[0];
+                contenedor.children[3].innerText = respuesta[4];
+                contenedor.children[4].value = respuesta[4];
+                cargarTotal(respuesta[5]);
+            }
+            var url = "/Pedidos/" + id.toString() + "/" + cantidad.toString() + "/" + precio.toString();
+            xhttp.open("GET", url);
+            xhttp.send();
+        }
+        function cargarTotal(subtotal){
+            document.getElementById("pedido_subtotal").innerText = "$ " + subtotal.toString();
+            document.getElementById("pedido_total").innerText = "$ " + (subtotal+5000).toString();
+            document.getElementById("total_confirmado").value = (subtotal+5000).toString();
+        }
     </script>
 {% endblock %}

@@ -8,7 +8,6 @@
     <link rel="shortcut icon" href="img/icono.png" type="image/x-icon">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" href="/static/css/estilos.css">
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 
@@ -21,7 +20,11 @@
     <header>
 	<ul id="menudropdown" class="dropdown-content">
         {% if 'nit' in session %}
+            {% if session['tipo'] == 1 %}
             <li><a href="/Usuario">Configuración</a></li>
+            {% else %}
+            <li><a href="/Usuario">Dashboard</a></li>
+            {% endif %}
             <li class="divider"></li>
             <li><a href="/Logout">Cerrar sesion</a></li>
         {% else %}

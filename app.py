@@ -1,5 +1,5 @@
 from flask import Flask,render_template,request,flash, session
-import sqlite3,bcrypt,os
+import sqlite3,bcrypt,os,json
 from werkzeug.utils import redirect
 app = Flask(__name__) 
 app.secret_key = os.urandom(24)
@@ -91,38 +91,20 @@ def mostrarMenu():
 
     if es_usuario():
         if request.method == 'POST':
-            if not request.form.get('precio'):
-                id_plato = request.form.get('id_plato_deseos')
-                deseoActivo = request.form.get('deseoActivo')
-                limpiarMensajes()
-                if deseoActivo == "false":
-                    statement = "INSERT INTO deseos (platos_id,usuarios_nit) VALUES ( ? , ? );"
-                    parametros = (id_plato,session["nit"])
-                    row_id = modificarBD(statement,parametros)
-                    flash("deseo_OK")
-                else:
-                    statement = "DELETE FROM deseos WHERE platos_id = ? AND usuarios_nit = ?;"
-                    parametros = (id_plato,session["nit"])
-                    row_id = modificarBD(statement,parametros)
-                    flash("borrar_deseo")      
-
+            id_plato = request.form.get('id_plato_deseos')
+            deseoActivo = request.form.get('deseoActivo')
+            limpiarMensajes()
+            if deseoActivo == "false":
+                statement = "INSERT INTO deseos (platos_id,usuarios_nit) VALUES ( ? , ? );"
+                parametros = (id_plato,session["nit"])
+                row_id = modificarBD(statement,parametros)
+                flash("deseo_OK")
             else:
-                id_plato = request.form.get('id_plato_carrito')
-                precio = request.form.get('precio')
-                if session["pedido"] == None:
-                    statement = "INSERT INTO pedido (total,usuarios_nit) VALUES ( ? , ? );"
-                    parametros = (0,session["nit"])
-                    pedido_id = modificarBD(statement,parametros)
-                    session["pedido"] = pedido_id
-                statement = "INSERT INTO detalles_plato(platos_id, pedido_id, cantidad, subtotal) VALUES(?,?,?,?);"
-                parametros = (id_plato,session["pedido"],1,precio)
-                respuesta = modificarBD(statement,parametros)
-                limpiarMensajes()
-                if isinstance(respuesta,str):
-                    if respuesta == "plato_registrado":
-                        flash(respuesta)
-                else:
-                    flash("OK")
+                statement = "DELETE FROM deseos WHERE platos_id = ? AND usuarios_nit = ?;"
+                parametros = (id_plato,session["nit"])
+                row_id = modificarBD(statement,parametros)
+                flash("borrar_deseo")        
+
         statement = "SELECT platos_id FROM deseos WHERE usuarios_nit = ?;"
         deseos = consultarBD(statement,[(session["nit"])])
     else:
@@ -131,6 +113,38 @@ def mostrarMenu():
             flash("login_failed")
             return redirect('/Login')
     return render_template('menu.html',titulo='Menu de platillos',platos=result,deseos=deseos)
+
+@app.route('/Menu/<int:id_plato_carrito>/<int:cantidad>',methods=["GET"])
+def agregarMenu(id_plato_carrito=None,cantidad=None):
+    if es_usuario():
+        if request.method == 'GET':      
+            if id_plato_carrito and id_plato_carrito > 0 and cantidad and cantidad > 0:
+                statement = "SELECT precio FROM platos WHERE id = ?;"
+                res = consultarBD(statement,(id_plato_carrito,))
+                if res:
+                    precio = res[0][0]
+                    if session["pedido"] == None:
+                        statement = "INSERT INTO pedido (total,usuarios_nit) VALUES ( ? , ? );"
+                        parametros = (0,session["nit"])
+                        pedido_id = modificarBD(statement,parametros)
+                        session["pedido"] = pedido_id
+                    statement = "INSERT INTO detalles_plato(platos_id, pedido_id, cantidad, subtotal) VALUES(?,?,?,?);"
+                    parametros = (id_plato_carrito,session["pedido"],cantidad,precio*cantidad)
+                    respuesta = modificarBD(statement,parametros)
+                    limpiarMensajes()
+                    if isinstance(respuesta,str):
+                        if respuesta == "plato_registrado":
+                            flash(respuesta)
+                    else:
+                        flash("OK")
+                else:
+                    limpiarMensajes()
+                    flash("plato_no_encontrado")
+                return redirect('/Menu')
+    else:
+        limpiarMensajes()
+        flash("login_failed")
+        return redirect('/Login')
 
 @app.route('/Menu/detalle_plato/<int:id_plato>',methods=["GET"])
 def detallesPlatoID(id_plato=None):
@@ -181,10 +195,27 @@ def pedidos():
                     flash("pedidoConfirmado")
                     return redirect('/Usuario/Pedidos/')
         if session["pedido"] != None:
-            statement = "SELECT p.id, nombre, precio, imagen,cantidad,subtotal FROM platos as p inner join detalles_plato dp ON p.id = dp.platos_id where dp.pedido_id = ?;"
+            statement = "SELECT p.id, nombre, imagen,cantidad,dp.subtotal,precio FROM platos as p inner join detalles_plato dp ON p.id = dp.platos_id where dp.pedido_id = ?;"
             parametros = [(session["pedido"])]
             detalles = consultarBD(statement,parametros)
     return render_template('pedidos.html',titulo='Carrito de compras',platos = detalles)
+
+@app.route('/Pedidos/<int:id_plato>/<int:cantidad>/<string:precio>',methods=["GET"])
+def ActualizaPedido(id_plato=None,cantidad=None,precio=None):
+    if es_usuario():
+        if request.method == "GET":
+            statement = "UPDATE detalles_plato SET cantidad = ?,subtotal = ? WHERE pedido_id = ? AND platos_id = ? ;"
+            parametros = (cantidad,float(precio)*cantidad,session["pedido"],id_plato)
+            row_id = modificarBD(statement,parametros)
+            statement = "SELECT p.id, nombre, imagen,cantidad,dp.subtotal FROM platos as p inner join detalles_plato dp ON p.id = dp.platos_id where dp.pedido_id = ? AND dp.platos_id = ? ;"
+            parametros = (session["pedido"],id_plato)
+            detalles = consultarBD(statement,parametros)
+            if detalles:
+                statement = "SELECT total FROM pedido WHERE id = ?;"
+                total = consultarBD(statement,(session["pedido"],))
+                detalles[0] = detalles[0] + total[0]
+                return json.dumps(detalles)
+
 
 @app.route('/Usuario/',methods=["GET","POST"])
 def perfilUsuario():
@@ -271,11 +302,107 @@ def gestionComentarios():
 
 @app.route('/Usuario/Administrador')
 def ingresoAdministrador():
-    return render_template('administrador.html',titulo='Administrador Dashboard')
+    if es_usuario():
+        if es_admin():
+            return render_template('administrador.html',titulo='Administrador Dashboard')
+        else:
+            limpiarMensajes()
+            flash("sin_permiso")
+            return redirect('/')
+    else:
+        limpiarMensajes()
+        flash("login_failed")
+        return redirect('/Login')
 
-@app.route('/Usuario/Administrador/GestionarUsuarios')
+@app.route('/Usuario/Administrador/GestionarUsuarios',methods=["GET"])
 def gestionUsuarios():
-    return render_template('gestionar_usuarios.html',titulo='Gestionar usuarios')
+    if es_usuario():
+        if es_admin():
+            statement="select Nit,nombre,apellido,telefono,correoelectronico,fechanacimiento,direccion,usuario FROM usuarios WHERE tipousuarios_id = 1;"
+            usuarios = consultarBD(statement,None)
+            return render_template('admin_usuarios.html',titulo='Gestionar usuarios',usuarios=usuarios)
+        else:
+            limpiarMensajes()
+            flash("sin_permiso")
+            return redirect('/')
+    else:
+        limpiarMensajes()
+        flash("login_failed")
+        return redirect('/Login')
+
+@app.route('/Usuario/Administrador/GestionarUsuarios/Borra/<int:nit_borrar>')
+def borrarUsuario(nit_borrar=None):
+    if es_usuario():
+        if es_admin() or es_superadmin():
+            statement="DELETE FROM usuarios WHERE NIT = ?;"
+            parametros = (nit_borrar,)
+            row_id = modificarBD(statement,parametros)
+            return redirect('/Usuario/Administrador/GestionarUsuarios')
+        else:
+            limpiarMensajes()
+            flash("sin_permiso")
+            return redirect('/')
+    else:
+        limpiarMensajes()
+        flash("login_failed")
+        return redirect('/Login')
+
+@app.route('/Usuario/Administrador/GestionarPlatos',methods=["GET","POST"])
+def gestionPlatos():
+    if es_usuario():
+        if es_admin() or es_superadmin():
+            statement="SELECT id,nombre,precio,descripcion FROM platos;"
+            platos = consultarBD(statement,None)
+            return render_template('admin_platos.html',titulo='Gestionar platos',platos = platos)
+        else:
+            limpiarMensajes()
+            flash("sin_permiso")
+            return redirect('/')
+    else:
+        limpiarMensajes()
+        flash("login_failed")
+        return redirect('/Login')
+
+@app.route('/Usuario/Administrador/GestionarPlatos/<string:accion>/<int:id_plato>',methods=["GET","POST"])
+def accionesPlatos(accion=None,id_plato=None):
+    if es_usuario():
+        if es_admin() or es_superadmin():
+            if accion == 'Borra':
+                statement="DELETE FROM platos WHERE id = ?;"
+                row_id = modificarBD(statement,(id_plato,))
+                return redirect('/Usuario/Administrador/GestionarPlatos')
+            if accion == 'Crea' or accion == 'Actualiza':
+                if id_plato != 0:
+                    statement="SELECT id,nombre,precio,descripcion FROM platos WHERE id = ?;"
+                    plato = consultarBD(statement,(id_plato,))[0]
+                    titulo = 'Actualizar plato'
+                else:
+                    plato = None
+                    titulo = 'Crear plato'
+                return render_template('gestionPlatos.html',titulo=titulo,plato=plato)
+        else:
+            limpiarMensajes()
+            flash("sin_permiso")
+            return redirect('/')
+    else:
+        limpiarMensajes()
+        flash("login_failed")
+        return redirect('/Login')
+'''
+@app.route('/creaAdmin/')
+def test():
+    password = '123'
+    #Encriptar contraseña
+    password = password.encode()
+    key = bcrypt.gensalt()
+    passwordEncriptada = bcrypt.hashpw(password, key)
+
+    statement = "INSERT INTO usuarios(NIT,nombre,apellido,telefono,correoelectronico,fechanacimiento,direccion,usuario,contrasena,tipousuarios_id) VALUES (?,?,?,?,?,?,?,?,?,?)"
+    parametros = (777,'Admin','Local',7771777,'Admin@Admin.com','1990-01-01','Calle del Admin','Admin',passwordEncriptada,2)
+        
+    row_id = modificarBD(statement,parametros)
+    return redirect('/Login')'''
+
 
 ### Funciones
 def consultarBD(query,params):
@@ -319,15 +446,14 @@ def modificarBD(statement,params):
         except sqlite3.Error as error:
             if  str(error) == 'UNIQUE constraint failed: detalles_plato.platos_id, detalles_plato.pedido_id':
                 return "plato_registrado"
-            print("Error while connecting to SQLite ", error)
+            else:
+                return str(error)
         finally:
             if sqliteConnection:
                 sqliteConnection.close()
                 print("The SQLite connection is closed")
             if valid:
                 return row_id
-            else:
-                return None
 
 def login_user(usuario,pedido):
     session["nit"] = usuario[0]

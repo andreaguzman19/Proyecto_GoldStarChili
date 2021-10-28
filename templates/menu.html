@@ -37,11 +37,7 @@
                         <p style="font-size:22px; font-style: italic;">${{plato[2]}}</p>
                     </div>
                     <div class="card-action card_with2button" >
-                        <form action="/Menu" method="POST">
-                            <input name="id_plato_carrito" type="hidden" value="{{plato[0]}}">
-                            <input name="precio" type="hidden" value="{{plato[2]}}">
-                            <button class="waves-effect waves-light btn" type="submit">Agregar</button>
-                        </form>
+                        <a class="waves-effect waves-light btn" href="/Menu/{{plato[0]}}/1">Agregar</a>
                         <a class="waves-effect waves-light btn purple" href="/Menu/detalle_plato/{{plato[0]}}">Detalles</a>
                     </div>
                 </div>
@@ -63,6 +59,8 @@
                 mensaje = document.getElementById("mensajeflash").value;
                     if(mensaje == "plato_registrado")
                         M.toast({html: '<i class="material-icons left">block</i>Plato añadido anteriormente!',classes: 'red lighten-2',displayLength: 3000});
+                    if(mensaje == "plato_no_encontrado")
+                        M.toast({html: '<i class="material-icons left">search</i>Plato no encontrado!!',classes: 'red lighten-2',displayLength: 3000});
                     if(mensaje == "OK")
                         M.toast({html: 'Añadido al carrito!',displayLength: 2000});
                     if(mensaje == "deseo_OK")

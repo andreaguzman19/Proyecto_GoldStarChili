@@ -126,3 +126,6 @@ a.tooltipped i:hover{
 	height     : 100%;
 	opacity    : 0.8;
 }
+table.striped>tbody>tr:nth-child(odd) {
+    background-color: rgba(186,242,242,0.5) !important;
+}

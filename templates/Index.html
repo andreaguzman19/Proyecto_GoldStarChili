@@ -1,12 +1,8 @@
 {% extends "base.html" %}
 {% block contenido %}
-<!--<div class="banner">
-    <div class="banner-body">
-        <h3 class="text-uppercase">Bienvenido a Gold Star Chili</h3>
-        <p>Los mejores platillos y la mejor calidad los encuentras en Gold Star Chili</p>
-        <a class="waves-effect waves-light btn" href="/Menu"><i class="material-icons left">restaurant_menu</i>Ir al menu</a>
-    </div>
-</div>-->
+{% for message in get_flashed_messages() %}
+<input id="mensajeflash" type="hidden" value="{{message}}">
+{% endfor %}
 <div class="slider">
     <ul class="slides">
       <li>
@@ -66,5 +62,13 @@
         var elems = document.querySelectorAll('.slider');
         var instances = M.Slider.init(elems, options);
     });
+    window.addEventListener('load', (event) => {
+            if(document.getElementById("mensajeflash")){
+                mensaje = document.getElementById("mensajeflash").value;
+                    if(mensaje == "sin_permiso")
+                        M.toast({html: '<i class="material-icons left">block</i>No dispone de los permisos para ver esta pagina!',classes: 'red lighten-2',displayLength: 3500});
+            }
+        });
+
 </script>
 {% endblock %}

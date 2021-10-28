@@ -1,0 +1,45 @@
+{% extends "baseUsuarios.html" %}
+{% block contenidoUsuario %}
+{% for message in get_flashed_messages() %}
+<input id="mensajeflash" type="hidden" value="{{message}}">
+{% endfor %} 
+    <div class="col dashboard_innerContent" style="padding: 0px 20px 40px 20px;">     
+        <div class="col s10 offset-s1">
+            <div class="col s8"><h4 class="right-align">Gestion de platos</h4></div>
+            <div class="col s4" style="margin-top: 22px;"><a class="waves-effect waves-light btn right" href="/Usuario/Administrador/GestionarPlatos/Crea/0" style="margin-bottom: 15px;"><i class="material-icons left">add</i>Crear nuevo plato</a></div>
+            <br>
+            <table class="striped highlight" style="border: 1px solid rgb(141, 200, 204);">
+                <thead style="background-color: skyblue;">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Descripcion</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plato in platos %}
+                    <tr>
+                        <td>{{ plato[0] }}</td>
+                        <td>{{ plato[1] }}</td>
+                        <td>{{ plato[2] }}</td>
+                        <td>{{ plato[3] }}</td>
+                        <td style="width: 120px;">
+                            <a class="waves-effect waves-light btn orange lighten-1" href="/Usuario/Administrador/GestionarPlatos/Actualiza/{{plato[0]}}"><i class="material-icons">refresh</i></a>
+                            <a class="waves-effect waves-light btn red lighten-2" href="/Usuario/Administrador/GestionarPlatos/Borra/{{plato[0]}}"><i class="material-icons">delete</i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endblock %}
+    {% block scriptsUsuarios %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var options = {};
+            });
+        </script>
+    {% endblock %}

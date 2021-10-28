@@ -1,0 +1,55 @@
+{% extends "baseUsuarios.html" %}
+{% block contenidoUsuario %}
+{% for message in get_flashed_messages() %}
+<input id="mensajeflash" type="hidden" value="{{message}}">
+{% endfor %} 
+    <div class="col dashboard_innerContent" style="padding: 0px 20px 40px 20px;">     
+        <h4 class="center-align">Gestion de platos</h4><br>
+        <div class="col s10 offset-s1">
+            <form method="post">
+                {% if plato %}
+                <div class="input-field col s12 m6 offset-m3">
+                    <input id="id" name="id" type="number" class="validate" disabled value="{{plato[0]}}">
+                    <label for="id">ID del plato:</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input id="nombre" name="nombre" type="text" class="validate" value="{{plato[1]}}">
+                    <label for="nombre">Nombre del plato:</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input id="precio" name="precio" type="number" step="100" class="validate" value="{{plato[2]}}">
+                    <label for="precio">Precio:</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <textarea id="descripcion" name="descripcion" class="materialize-textarea" value="{{plato[3]}}"></textarea>
+                    <label for="descripcion">Descripcion:</label>
+                </div>
+                {% else %}
+                <div class="input-field col s12 m6 offset-m3">
+                    <input id="id" name="id" type="number" class="validate">
+                    <label for="id">ID del plato:</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input id="nombre" name="nombre" type="text" class="validate">
+                    <label for="nombre">Nombre del plato:</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input id="precio" name="precio" type="number" step="0.50" class="validate">
+                    <label for="precio">Precio:</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <textarea id="descripcion" name="descripcion" class="materialize-textarea"></textarea>
+                    <label for="descripcion">Descripcion:</label>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    {% endblock %}
+    {% block scriptsUsuarios %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var options = {};
+            });
+        </script>
+    {% endblock %}
