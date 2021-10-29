@@ -52,7 +52,7 @@
     <nav style="background-color: #89D6F7;">
         <div class="nav-wrapper">
             <a href="/" class="brand-logo"><img src="/static/img/logo.PNG" alt=""style="padding-left: 15px padding-top: 5px;"></a>
-            <a href="#!" data-target="nav-mobile" class="top-nav sidenav-trigger full hide-on-large-only"><i class="material-icons" style="color:black; font-size: 3rem;">menu</i></a>
+            <a href="#!" data-target="nav-mobile" class="hidden top-nav sidenav-trigger full hide-on-large-only"><i class="material-icons" style="color:black; font-size: 3rem;">menu</i></a>
             <ul class="right hide-on-small-only">
                 <li><a class="icono" href="/Menu"><i class="material-icons" style="font-size: 2rem;">restaurant_menu</i></a></li>
                 <li><a class="icono" href="/Lista_deseos"><i class="material-icons" style="font-size: 2rem;">star_border</i></a></li>
@@ -94,6 +94,8 @@
             var opciones = {};
             var elementos = document.querySelectorAll('.sidenav');
             var instancias = M.Sidenav.init(elementos, opciones);
+            if(document.getElementById("nav-mobile"))
+                document.getElementsByClassName("hidden")[0].classList.remove("hidden");
         });
     </script>
     {% block scripts %}

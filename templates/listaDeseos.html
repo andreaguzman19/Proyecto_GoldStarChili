@@ -3,18 +3,18 @@
     <main>
     <div class="container">
         <div class="row">
-            <div class="col m6"><h3 style="margin:20px 0px;">Lista de deseos</h3></div>
-            <div class="col m4 input-field">
+            <div class="col s12 l6"><h3 style="margin:20px 0px;">Lista de deseos</h3></div>
+            <div class="col s10 m6 l4 input-field">
                 <input id="Busqueda" type="text" class="validate">
                 <label for="Busqueda">Buscar plato</label>
             </div>
-            <div class="col m2" style="margin:30px 0px 10px 0px;">
+            <div class="col s2 m4 l2" style="margin:30px 0px 10px 0px;">
                 <a onclick="buscarPlato()" class="waves-effect waves-light btn"><i class="material-icons">search</i></a>
             </div>
         </div>
         <div class="row">
                 {% for plato in platos%}
-                <div class="col m3 plato">
+                <div class="col s6 m4 l3 plato">
                     <div class="card hoverable">
                         <div class="card-image">
                             <img src="/static/img/{{plato[3]}}" class="materialboxed" height="160px" width="auto">

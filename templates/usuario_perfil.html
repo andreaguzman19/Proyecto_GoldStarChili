@@ -6,7 +6,7 @@
     <div class="col dashboard_innerContent" style="padding: 0px 20px 40px 20px;">
         <h4 class="center-align">Nombre de usuario: <b>{{ session["usuario"] }}</b></h4><br>
         <form method="post">
-            <div class="col s8 push-s2">
+            <div class="col s12 m8 push-m2">
                 <div class="input-field col s12 m6">
                     <input id="nombre" name="nombre" type="text" class="validate" value="{{ datos[0] }}" disabled>
                     <label for="nombre">Nombre</label>
@@ -32,10 +32,10 @@
                     <label for="direccion">Direccion</label>
                 </div>
                 <div class="col s12 center-align" style="margin-bottom: 15px;">
-                    <a class="waves-effect waves-light btn" onclick="campos()" style="width: 250px;"><i class="material-icons left">edit</i>Editar campos</a>
+                    <a id="editarCampos" class="waves-effect waves-light btn" onclick="campos()"><i class="material-icons left">edit</i>Editar campos</a>
                 </div>
                 <div class="col s12 center-align">
-                    <button id="guardaCambiosUsuario" class="waves-effect waves-light btn purple" href="/Usuario/" type="submit" disabled style="width: 250px;"><i class="material-icons left">save</i>Guardar cambios</button>
+                    <button id="guardaCambiosUsuario" class="waves-effect waves-light btn purple" href="/Usuario/" type="submit" disabled><i class="material-icons left">save</i>Guardar cambios</button>
                 </div>
             </div>
         </form>

@@ -6,10 +6,10 @@
     <main>
     <div class="container">
         <div class="row">
-            <div class="col m6"><h3 style="margin:20px 0px;">Carrito de compras</h3></div>
+            <div class="col s12 m8 l6"><h3 style="margin:20px 0px;">Carrito de compras</h3></div>
         </div>
         <div class="row">
-            <div class="col m7 platos_del_carro">
+            <div class="col s12 m7 platos_del_carro">
                 {% for plato in platos %}
                   <div class="row card hoverable platopedido" style="margin-bottom: 20px;">
                     <form action="/Pedidos/" method="post">
@@ -17,10 +17,10 @@
                         <input type="hidden" name="request" value="borraDetalle">
                         <button class="flotante_star white white-red btn-floating btn-small waves-effect waves-light" type="submit"><i class="material-icons red-text">close</i></button>
                     </form>
-                    <div class="col m7" style="margin-top: 15px;">
+                    <div class="col m8" style="margin-top: 15px;">
                         <img src="/static/img/{{plato[2]}}" width="100%">
                     </div>
-                    <div class="col m5">
+                    <div class="col m4">
                         <div class="row" style = "margin-bottom: 0px;">
                             <p style="font-size: 22px; font-weight: bold; margin: 10px; " >{{plato[1]}}</p>
                         </div>
@@ -48,19 +48,19 @@
                 <div class="row" >
                     <div class="col s12" style="display: flex; justify-content: space-around;">
                         {% if 'pedido' in session %}
-                        <p>Subtotal  </p><p id="pedido_subtotal"></p>
+                        <p class="hide-on-med-only">Subtotal  </p><p id="pedido_subtotal"></p>
                         {% else %}
                         <p>Subtotal  $ 0</p>
                         {% endif %}
                     </div>
-                    <div class="col s12" style="display: flex; justify-content: space-around;"> 
-                        <p>Envio</p><p>$ 5000</p>
+                    <div class="col s12" style="display: flex; justify-content: space-around;">
+                        <p class="hide-on-med-only">Envio</p><p>$ 5000</p>
                     </div>   
                 </div>
                 <div class="row">
                     <div class="col s12" style="display: flex; justify-content: space-around; margin-bottom:15px;">
                         {% if 'pedido' in session%}
-                        <span style="font-size:25px; font-weight: bold;">Total  </span>
+                        <span style="font-size:25px; font-weight: bold;" class="hide-on-med-only">Total  </span>
                         <span style="font-size:25px; font-weight: bold;" id="pedido_total"></span>
                         {% else %}
                         <span style="font-size:25px; font-weight: bold;">Total  $ 0</span>

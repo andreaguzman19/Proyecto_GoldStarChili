@@ -26,15 +26,25 @@ main {
     .container.login{
         width: 50%;
     }
+    #editarCampos, #guardaCambiosUsuario{
+        width: 250px;
+    }
 }
 @media only screen and (max-width: 600px) and (min-width: 424px){
     .container.login{
         width: 75%;
     }
+    #editarCampos, #guardaCambiosUsuario{
+        width: 200px;
+    }
 }
 @media only screen and (max-width: 425px){
     .container.login{
         width: 100%;
+    }
+    #editarCampos, #guardaCambiosUsuario{
+        height: 70px;
+        width: 150px;
     }
 } 
 #header{
@@ -52,19 +62,16 @@ main {
     padding: 0px 5px;
     color:black;
 }
-.flotante_star{
-    position: absolute;
+.col.s6.m4.l3.plato .card-image .flotante_star{
+    left: 90%;
+    bottom: 175px;
 }
-.col.m4 .card-image .flotante_star{
-    left: 237px;
-    bottom: 160px;
-}
-.col.m3 .card-image .flotante_star{
-    left: 175px;
-    bottom: 135px;
+.col.s12.m6.l4.plato .card-image .flotante_star{
+    left: 92%;
+    bottom: 216px;
 }
 .platopedido .flotante_star{
-    left: 508px;
+    left: 96.5%;
     top: -13px;
 }
 .flotante_star.white-red:hover{
@@ -118,6 +125,13 @@ main {
         width: 90%;
     }
 }
+@media screen and (max-width: 600px) {
+    .dashboard_innerContent{
+        border-radius: 15px;
+        left: 5%;
+        width: 90%;
+    }
+}
 .brand-logo{
     padding-left: 15px;
     padding-top: 5px;
@@ -143,4 +157,10 @@ a.tooltipped i:hover{
 }
 table.striped>tbody>tr:nth-child(odd) {
     background-color: rgba(186,242,242,0.5) !important;
+}
+.hidden{
+    display:none;
+}
+.card-content{
+    padding-top: 0px !important;
 }
