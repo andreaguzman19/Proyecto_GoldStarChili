@@ -32,22 +32,43 @@
             <li><a href="/Registro">Regístrate</a></li>
         {% endif %}
     </ul>
+    <ul id="navdropdown" class="dropdown-content">
+        <li><a href="/Menu"><i class="material-icons left" style="font-size: 2rem;">restaurant_menu</i>Menu</a></li>
+        <li><a href="/Lista_deseos"><i class="material-icons left" style="font-size: 2rem;">star_border</i>Deseos</a></li>
+        <li><a href="/Pedidos"><i class="material-icons left" style="font-size: 2rem;">shopping_cart</i>Carrito</a></li>
+        {% if 'nit' in session %}
+            {% if session['tipo'] == 1 %}
+            <li><a href="/Usuario"><i class="material-icons left" style="font-size: 2rem;">settings</i>Configuración</a></li>
+            {% else %}
+            <li><a href="/Usuario/Administrador"><i class="material-icons left" style="font-size: 2rem;">dashboard</i>Dashboard</a></li>
+            {% endif %}
+            <li class="divider"></li>
+            <li><a href="/Logout"><i class="material-icons left" style="font-size: 2rem;">highlight_off</i>Cerrar sesion</a></li>
+        {% else %}
+            <li><a href="/Login"><i class="material-icons left" style="font-size: 2rem;">person</i>Iniciar sesion</a></li>
+            <li><a href="/Registro"><i class="material-icons left" style="font-size: 2rem;">person_add</i>Regístrate</a></li>
+        {% endif %}
+    </ul>
     <nav style="background-color: #89D6F7;">
         <div class="nav-wrapper">
             <a href="/" class="brand-logo"><img src="/static/img/logo.PNG" alt=""style="padding-left: 15px padding-top: 5px;"></a>
-            <ul class="right hide-on-med-and-down">
+            <a href="#!" data-target="nav-mobile" class="top-nav sidenav-trigger full hide-on-large-only"><i class="material-icons" style="color:black; font-size: 3rem;">menu</i></a>
+            <ul class="right hide-on-small-only">
                 <li><a class="icono" href="/Menu"><i class="material-icons" style="font-size: 2rem;">restaurant_menu</i></a></li>
                 <li><a class="icono" href="/Lista_deseos"><i class="material-icons" style="font-size: 2rem;">star_border</i></a></li>
                 <li><a class="icono" href="/Pedidos"><i class="material-icons" style="font-size: 2rem;">shopping_cart</i></a></li>
                 <!-- Dropdown Trigger -->
                 <li><a class="icono dropdown-trigger" href="#!" data-target="menudropdown"><i class="material-icons" style="font-size: 3rem;">expand_more</i></a></li>
             </ul>
+            <ul class="right show-on-small hide-on-med-and-up">
+                <li><a class="icono dropdown-trigger" href="#!" data-target="navdropdown"><i class="material-icons" style="font-size: 3rem;">menu</i></a></li>
+            </ul>
         </div>
     </nav>
     </header>
     {% if 'nit' in session %}
         {% if session["pedido"] != None %}
-        <div class="circuloCarrito"></div>
+        <div class="circuloCarrito hide-on-small-only"></div>
         {% endif %}
     {% endif %}
     <!-- Content -->
@@ -66,11 +87,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             var options = {
                 constrainWidth: false,
-                coverTrigger: false,
-                hover: true
+                coverTrigger: false
             };
             var elems = document.querySelectorAll('.dropdown-trigger');
             var instances = M.Dropdown.init(elems, options);
+            var opciones = {};
+            var elementos = document.querySelectorAll('.sidenav');
+            var instancias = M.Sidenav.init(elementos, opciones);
         });
     </script>
     {% block scripts %}
