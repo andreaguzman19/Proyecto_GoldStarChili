@@ -28,7 +28,8 @@
 {% block scripts %}
     <script>
         window.addEventListener('load', (event) => {
-            mensaje = document.getElementById("mensajeflash").value;
+            if(document.getElementById("mensajeflash")){
+                mensaje = document.getElementById("mensajeflash").value;
                 if(mensaje == "fallido")
                     Swal.fire( 'Error!',
                         'Usuario y/o contraseña incorrectas!',
@@ -43,6 +44,8 @@
                 }
                 if(mensaje == "login_failed")
                     Swal.fire( 'Error!','Debes iniciar sesion para continuar!','error');
+            }
+            document.getElementById("usuario").focus();
         });
     </script>
 {% endblock %}

@@ -1,0 +1,59 @@
+{% extends "baseUsuarios.html" %}
+{% block contenidoUsuario %}
+{% for message in get_flashed_messages() %}
+<input id="mensajeflash" type="hidden" value="{{message}}">
+{% endfor %} 
+    <div class="col dashboard_innerContent" style="padding: 0px 20px 40px 20px;">
+        <div class="col s12"><h4 class="center-align">Informes</h4></div>
+        <br>
+        <div class="input-field col s5">
+            <select>
+              <option value="" disabled selected>Seleccione un informe</option>
+              <option value="1">Informe de ventas mensual</option>
+              <option value="2">Ventas en rango de fechas</option>
+              <option value="3">Platos mas pedidos</option>
+              <option value="4">Platos mas deseados</option>
+            </select>
+            <label>Informes</label>
+          </div>
+        <div class="col s5 offset-s2" style="border: 1px solid;">
+            <div class="input-field col s12">
+                <input id="total" type="number" style="font-size: larger; font-weight: 600;" class="validate" value="{{total}}" disabled>
+                <label for="total" style="font-size: large;">Total ventas:</label>
+            </div>
+        </div>
+        <div class="col s10 offset-s1" style="margin-top: 15px;">
+            <table class="striped highlight" style="border: 1px solid rgb(141, 200, 204);">
+                <thead style="background-color: skyblue;">
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pedido in pedidos %}
+                    <tr>
+                        <td>{{ pedido[0] }}</td>
+                        <td>{{ pedido[1] }}</td>
+                        <td>{{ pedido[2] }}</td>
+                        <td>{{ pedido[3] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block scriptsUsuarios %}
+    <script>
+        window.addEventListener('load', (event) => {
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            var options ={};
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems, options);
+        });
+    </script>
+{% endblock %}

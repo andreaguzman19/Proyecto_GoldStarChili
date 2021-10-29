@@ -12,5 +12,12 @@
 {% endblock %}
 {% block scriptsUsuarios %}
     <script>
+        window.addEventListener('load', (event) => {
+            if(document.getElementById("mensajeflash")){
+                mensaje = document.getElementById("mensajeflash").value;
+                if(mensaje == "exito")
+                    Swal.fire( 'Exito!','Usuario logueado correctamente!','success');
+            }
+        });
     </script>
 {% endblock %}

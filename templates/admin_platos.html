@@ -6,7 +6,7 @@
     <div class="col dashboard_innerContent" style="padding: 0px 20px 40px 20px;">     
         <div class="col s10 offset-s1">
             <div class="col s8"><h4 class="right-align">Gestion de platos</h4></div>
-            <div class="col s4" style="margin-top: 22px;"><a class="waves-effect waves-light btn right" href="/Usuario/Administrador/GestionarPlatos/Crea/0" style="margin-bottom: 15px;"><i class="material-icons left">add</i>Crear nuevo plato</a></div>
+            <div class="col s4" style="margin-top: 22px;"><a class="waves-effect waves-light btn right" href="/Usuario/Administrador/GestionarPlato/Crea/{{platos[(platos|length)-1][0]+1}}" style="margin-bottom: 15px;"><i class="material-icons left">add</i>Crear nuevo plato</a></div>
             <br>
             <table class="striped highlight" style="border: 1px solid rgb(141, 200, 204);">
                 <thead style="background-color: skyblue;">
@@ -26,8 +26,9 @@
                         <td>{{ plato[2] }}</td>
                         <td>{{ plato[3] }}</td>
                         <td style="width: 120px;">
-                            <a class="waves-effect waves-light btn orange lighten-1" href="/Usuario/Administrador/GestionarPlatos/Actualiza/{{plato[0]}}"><i class="material-icons">refresh</i></a>
-                            <a class="waves-effect waves-light btn red lighten-2" href="/Usuario/Administrador/GestionarPlatos/Borra/{{plato[0]}}"><i class="material-icons">delete</i></a>
+                            <a class="waves-effect waves-light btn orange lighten-1" href="/Usuario/Administrador/GestionarPlato/Actualiza/{{plato[0]}}"><i class="material-icons">refresh</i></a>
+                            <a class="waves-effect waves-light btn red lighten-2" onclick="confirmacionBorrar(this)"><i class="material-icons">delete</i></a>
+                            <input type="hidden" value="{{plato[0]}}">
                         </td>
                     </tr>
                     {% endfor %}
@@ -41,5 +42,28 @@
             document.addEventListener('DOMContentLoaded', function() {
                 var options = {};
             });
+            function confirmacionBorrar(elem){
+                Swal.fire({
+                    title: 'Esta seguro?',
+                    text: "Desea borrar este plato del menu?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, borrar!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                        'Borrado!',
+                        'El plato fue eliminado correctamente.',
+                        'success')
+                        setTimeout(() => {
+                            var id = elem.parentNode.children[2].value;
+                            window.location = window.location.origin + "/Usuario/Administrador/GestionarPlato/Borra/"+id;
+                        }, 2000);
+                    }
+                })
+            }
         </script>
     {% endblock %}

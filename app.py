@@ -41,7 +41,10 @@ def login():
                     if not pedidoEnProgreso:
                         login_user(usuarioPedido[0],None)
                     flash("exito")
-                    return redirect('/Usuario/')
+                    if usuarioPedido[0][4] == 1:
+                        return redirect('/Usuario/')
+                    else:
+                        return redirect('/Usuario/Administrador')
                 else:
                     flash("fallido")
             else:
@@ -318,7 +321,11 @@ def ingresoAdministrador():
 def gestionUsuarios():
     if es_usuario():
         if es_admin():
-            statement="select Nit,nombre,apellido,telefono,correoelectronico,fechanacimiento,direccion,usuario FROM usuarios WHERE tipousuarios_id = 1;"
+            statement="select Nit,nombre,apellido,telefono,correoelectronico,fechanacimiento,direccion,usuario FROM usuarios "
+            if es_superadmin():
+                statement = statement + "WHERE tipousuarios_id != 3;"
+            else:
+                statement = statement + "WHERE tipousuarios_id = 1;"
             usuarios = consultarBD(statement,None)
             return render_template('admin_usuarios.html',titulo='Gestionar usuarios',usuarios=usuarios)
         else:
@@ -333,24 +340,33 @@ def gestionUsuarios():
 @app.route('/Usuario/Administrador/GestionarUsuarios/Borra/<int:nit_borrar>')
 def borrarUsuario(nit_borrar=None):
     if es_usuario():
-        if es_admin() or es_superadmin():
+        if es_superadmin():
             statement="DELETE FROM usuarios WHERE NIT = ?;"
             parametros = (nit_borrar,)
             row_id = modificarBD(statement,parametros)
             return redirect('/Usuario/Administrador/GestionarUsuarios')
         else:
-            limpiarMensajes()
-            flash("sin_permiso")
-            return redirect('/')
+            if es_admin():
+                statement="SELECT tipousuarios_id FROM usuarios WHERE NIT = ?;"
+                result = consultarBD(statement,(nit_borrar,))
+                if result[0][0] == 1:
+                    statement="DELETE FROM usuarios WHERE NIT = ?;"
+                    parametros = (nit_borrar,)
+                    row_id = modificarBD(statement,parametros)
+                return redirect('/Usuario/Administrador/GestionarUsuarios')
+            else:
+                limpiarMensajes()
+                flash("sin_permiso")
+                return redirect('/')
     else:
         limpiarMensajes()
         flash("login_failed")
         return redirect('/Login')
 
-@app.route('/Usuario/Administrador/GestionarPlatos',methods=["GET","POST"])
+@app.route('/Usuario/Administrador/GestionarPlatos',methods=["GET"])
 def gestionPlatos():
     if es_usuario():
-        if es_admin() or es_superadmin():
+        if es_admin():
             statement="SELECT id,nombre,precio,descripcion FROM platos;"
             platos = consultarBD(statement,None)
             return render_template('admin_platos.html',titulo='Gestionar platos',platos = platos)
@@ -363,23 +379,40 @@ def gestionPlatos():
         flash("login_failed")
         return redirect('/Login')
 
-@app.route('/Usuario/Administrador/GestionarPlatos/<string:accion>/<int:id_plato>',methods=["GET","POST"])
+@app.route('/Usuario/Administrador/GestionarPlato/<string:accion>/<int:id_plato>',methods=["GET","POST"])
 def accionesPlatos(accion=None,id_plato=None):
     if es_usuario():
-        if es_admin() or es_superadmin():
+        if es_admin():
+            if request.method == "POST":
+                id = request.form.get('plato')
+                nombre = request.form.get('nombre')
+                precio = request.form.get('precio')
+                descripcion = request.form.get('descripcion')
+                accion = request.form.get('accionPlato')
+                limpiarMensajes()
+                if accion == 'actualiza':
+                    statement= "UPDATE platos SET nombre = ? ,precio = ?,descripcion = ? WHERE id = ?;"
+                    parametros = (nombre,precio,descripcion,id)
+                    row_id = modificarBD(statement,parametros)
+                    flash("plato_actualizado")
+                if accion == 'crea':
+                    statement= "INSERT INTO platos(nombre,precio,descripcion,imagen) VALUES(?,?,?,'img.jpg');"
+                    parametros = (nombre,precio,descripcion)
+                    row_id = modificarBD(statement,parametros)
+                    flash("plato_creado")
+                return redirect('/Usuario/Administrador/GestionarPlatos')
             if accion == 'Borra':
                 statement="DELETE FROM platos WHERE id = ?;"
                 row_id = modificarBD(statement,(id_plato,))
                 return redirect('/Usuario/Administrador/GestionarPlatos')
-            if accion == 'Crea' or accion == 'Actualiza':
-                if id_plato != 0:
-                    statement="SELECT id,nombre,precio,descripcion FROM platos WHERE id = ?;"
-                    plato = consultarBD(statement,(id_plato,))[0]
-                    titulo = 'Actualizar plato'
-                else:
-                    plato = None
-                    titulo = 'Crear plato'
-                return render_template('gestionPlatos.html',titulo=titulo,plato=plato)
+            if accion == 'Actualiza':
+                statement="SELECT id,nombre,precio,descripcion FROM platos WHERE id = ?;"
+                plato = consultarBD(statement,(id_plato,))[0]
+                titulo = 'Actualizar plato'
+            if accion == 'Crea':
+                plato = None
+                titulo = 'Crear plato'
+            return render_template('gestionPlatos.html',titulo=titulo,plato=plato,id_plato = id_plato)
         else:
             limpiarMensajes()
             flash("sin_permiso")
@@ -388,21 +421,32 @@ def accionesPlatos(accion=None,id_plato=None):
         limpiarMensajes()
         flash("login_failed")
         return redirect('/Login')
-'''
-@app.route('/creaAdmin/')
-def test():
-    password = '123'
-    #Encriptar contraseña
-    password = password.encode()
-    key = bcrypt.gensalt()
-    passwordEncriptada = bcrypt.hashpw(password, key)
 
-    statement = "INSERT INTO usuarios(NIT,nombre,apellido,telefono,correoelectronico,fechanacimiento,direccion,usuario,contrasena,tipousuarios_id) VALUES (?,?,?,?,?,?,?,?,?,?)"
-    parametros = (777,'Admin','Local',7771777,'Admin@Admin.com','1990-01-01','Calle del Admin','Admin',passwordEncriptada,2)
-        
-    row_id = modificarBD(statement,parametros)
-    return redirect('/Login')'''
-
+@app.route('/Usuario/Administrador/Informes')
+def informes():
+    if es_usuario():
+        if es_superadmin():
+            statement="Select id,fecha,total,confirmado from pedido;"
+            pedidos = consultarBD(statement,None)
+            for i in range(0,len(pedidos)):
+                if pedidos[i][3] == 0:
+                    pedi = list(pedidos[i])
+                    pedi[3] = 'En progreso'
+                    pedidos[i] = tuple(pedi)
+                else:
+                    pedi = list(pedidos[i])
+                    pedi[3] = 'Finalizado'
+                    pedidos[i] = tuple(pedi)
+            total_pedidos = consultarBD("Select sum(total) from pedido;",None)
+            return render_template('informes.html',titulo='Administrador Dashboard',pedidos=pedidos,total=total_pedidos[0][0])
+        else:
+            limpiarMensajes()
+            flash("sin_permiso")
+            return redirect('/')
+    else:
+        limpiarMensajes()
+        flash("login_failed")
+        return redirect('/Login')
 
 ### Funciones
 def consultarBD(query,params):
@@ -444,6 +488,7 @@ def modificarBD(statement,params):
             cursor.close()
             valid = True
         except sqlite3.Error as error:
+            print(error)
             if  str(error) == 'UNIQUE constraint failed: detalles_plato.platos_id, detalles_plato.pedido_id':
                 return "plato_registrado"
             else:
@@ -477,7 +522,7 @@ def es_usuario():
 
 def es_admin():
     if 'tipo' in session:
-        if session['tipo'] == 2:
+        if session['tipo'] >= 2:
             return True
     return False
 

@@ -6,11 +6,12 @@
     <div class="col dashboard_innerContent" style="padding: 0px 20px 40px 20px;">     
         <h4 class="center-align">Gestion de platos</h4><br>
         <div class="col s10 offset-s1">
-            <form method="post">
+            <form method="post" href="/Usuario/Administrador/GestionarPlato">
                 {% if plato %}
                 <div class="input-field col s12 m6 offset-m3">
-                    <input id="id" name="id" type="number" class="validate" disabled value="{{plato[0]}}">
-                    <label for="id">ID del plato:</label>
+                    <input id="plato" type="number" class="validate" disabled value="{{id_plato}}">
+                    <label for="plato">ID del plato:</label>
+                    <input type="hidden" name="plato" value="{{id_plato}}">
                 </div>
                 <div class="input-field col s12 m6">
                     <input id="nombre" name="nombre" type="text" class="validate" value="{{plato[1]}}">
@@ -20,28 +21,29 @@
                     <input id="precio" name="precio" type="number" step="100" class="validate" value="{{plato[2]}}">
                     <label for="precio">Precio:</label>
                 </div>
-                <div class="input-field col s12 m6">
-                    <textarea id="descripcion" name="descripcion" class="materialize-textarea" value="{{plato[3]}}"></textarea>
+                <div class="input-field col s12">
+                    <textarea id="descripcion" name="descripcion" class="materialize-textarea">{{plato[3]}}</textarea>
                     <label for="descripcion">Descripcion:</label>
                 </div>
+                <input type="hidden" name="accionPlato" value="actualiza">
                 {% else %}
-                <div class="input-field col s12 m6 offset-m3">
-                    <input id="id" name="id" type="number" class="validate">
-                    <label for="id">ID del plato:</label>
-                </div>
                 <div class="input-field col s12 m6">
                     <input id="nombre" name="nombre" type="text" class="validate">
                     <label for="nombre">Nombre del plato:</label>
                 </div>
                 <div class="input-field col s12 m6">
-                    <input id="precio" name="precio" type="number" step="0.50" class="validate">
+                    <input id="precio" name="precio" type="number" step="100" class="validate">
                     <label for="precio">Precio:</label>
                 </div>
-                <div class="input-field col s12 m6">
+                <div class="input-field col s12">
                     <textarea id="descripcion" name="descripcion" class="materialize-textarea"></textarea>
                     <label for="descripcion">Descripcion:</label>
                 </div>
+                <input type="hidden" name="accionPlato" value="crea">
                 {% endif %}
+                <div class="input-field col s12 center-align">
+                    <button class="waves-effect waves-light btn" type="submit"><i class="material-icons left">save</i>Guardar Plato</button>
+                </div>
             </form>
         </div>
     </div>
