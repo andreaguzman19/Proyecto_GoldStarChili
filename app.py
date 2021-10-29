@@ -2,7 +2,7 @@ from flask import Flask,render_template,request,flash, session
 import sqlite3,bcrypt,os,json
 from werkzeug.utils import redirect
 app = Flask(__name__) 
-app.secret_key = os.urandom(24)
+app.secret_key = "erjvnkerjkvnkjnerjk16sdf"
 
 ### Rutas
 @app.route('/')
